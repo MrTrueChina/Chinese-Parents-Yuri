@@ -1,0 +1,8 @@
+{
+    "Id": "MtC.Mod.ChineseParents.Yuri",
+    "DisplayName": "百合 - Yuri",
+    "Author": "Mr.true.China",
+    "Version": "1.0.0",
+    "AssemblyName": "Yuri.dll",
+    "EntryMethod": "MtC.Mod.ChineseParents.Yuri.Main.Load"
+}
