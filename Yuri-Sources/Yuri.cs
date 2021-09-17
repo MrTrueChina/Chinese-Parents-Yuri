@@ -112,7 +112,7 @@ namespace MtC.Mod.ChineseParents.Yuri
                 __instance.alert_talk(alertness, panel);
 
                 ////////----////////----//////// Mod 修改部分 ////////----////////----////////
-                
+
                 // 每次点击更新是否显示相反性别的标志量
                 anotherSex = !anotherSex;
 
@@ -251,16 +251,13 @@ namespace MtC.Mod.ChineseParents.Yuri
             Main.ModEntry.Logger.Log("panel_girls.refresh 即将调用");
 
             // 测试功能，遍历女同学列表
-            foreach(KeyValuePair<int,int> pair in girlmanager.InstanceGirlmanager.GirlsDictionary)
+            foreach (KeyValuePair<int, int> pair in girlmanager.InstanceGirlmanager.GirlsDictionary)
             {
                 Main.ModEntry.Logger.Log("遍历女同学列表：key = " + pair.Key + ", value = " + pair.Value);
             }
 
             // 获取编译器生成的私有内部类 <refresh>c__AnonStorey1，这个类在反编译器中一般是默认隐藏的，需要开启编译器的显示自动生成的类功能
             Type type_c__AnonStorey1 = typeof(panel_girls).GetNestedType("<refresh>c__AnonStorey1", BindingFlags.NonPublic);
-
-            // 创建 <refresh>c__AnonStorey1 的实例
-            Activator.CreateInstance(type_c__AnonStorey1, new object[] { });
 
             // 这里应该是清除已有的选项，就是所有的女同学
             for (int i = 0; i < ___list.Count; i++)
@@ -306,9 +303,9 @@ namespace MtC.Mod.ChineseParents.Yuri
                         {
                             chat_manager.InstanceChatManager.start_chat(itemData.GetInt("hello_bad"), 0, 0, null, null, null, string.Empty, false, false);
                         }
-                        else if (player_data.Instance.Potentiality >= (float)typeof(panel_girls).GetField("need_potential", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null))
+                        else if (player_data.Instance.Potentiality >= (int)typeof(panel_girls).GetField("need_potential", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null))
                         {
-                            player_data.Instance.Potentiality -= (float)typeof(panel_girls).GetField("need_potential", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
+                            player_data.Instance.Potentiality -= (int)typeof(panel_girls).GetField("need_potential", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
 
                             __instance.chatPanel(int.Parse(item.name));
                             MessageCenter.sendMessage("refresh_ui_data", null);
