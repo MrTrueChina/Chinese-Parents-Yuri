@@ -506,10 +506,251 @@ namespace MtC.Mod.ChineseParents.Yuri
 
             Main.ModEntry.Logger.Log("ReadXml.GetData(\"chat\", 8200801) 调用完毕，结果 = " + __result);
 
-            foreach(KeyValuePair<string,string> pair in __result.value)
+            foreach (KeyValuePair<string, string> pair in __result.value)
             {
                 Main.ModEntry.Logger.Log("遍历结果：key = " + pair.Key + ", value = " + pair.Value);
             }
+        }
+    }
+
+    [HarmonyPatch(typeof(chat_manager), "start_chat")]
+    public static class chat_manager_start_chat
+    {
+        private static bool Prefix(chat_manager __instance, ref GameObject ___PanelGameObject, ref bool ___changedBGM, ref List<string> ___chatPlayerList, ref List<string>[] ___chatPlayerLists, ref List<string>[] ___chatDaughterLists, ref int ___effectId, ref int ___nextId, ref int ___curId, int id, int next, int next2, begintalkoverAction completeAction, string newtext, Transform parentTransform, string param, bool moreText, bool isAnniversary)
+        {
+            // 如果 Mod 未启动则直接按照游戏原本的逻辑进行调用
+            if (!Main.enabled)
+            {
+                return true;
+            }
+
+
+            if (DEF.isApproval && (id == 15001 || id == 201000001))
+            {
+                begintalkoverAction begintalkoverAction = completeAction;
+                if (begintalkoverAction != null)
+                {
+                    begintalkoverAction();
+                }
+                return false;
+            }
+            Transform transform;
+            if (DEF.IsDevelopment)
+            {
+                transform = UIManager.instance.Canvas_transform;
+                ___PanelGameObject = (Resources.Load("UIpanel/Panel_chat") as GameObject);
+            }
+            else
+            {
+                transform = __instance.transform;
+                if (__instance.transform == null)
+                {
+                    transform = UIManager.instance.Canvas_transform;
+                    Debug.Log("transform" + __instance.transform);
+                }
+            }
+            GameObject aGameObject = UnityEngine.Object.Instantiate<GameObject>(___PanelGameObject, transform.position, Quaternion.identity, transform);
+            aGameObject.transform.Find("next").gameObject.SetActive(false);
+            XmlData data = ReadXml.GetData("chat", id);
+            if (data.GetInt("type") == 7000000 && !isAnniversary)
+            {
+                // XXX：此处不知道对不对
+                MethodInfo anniversaryTipMethod = typeof(chat_manager).GetMethod("AnniversaryTip", BindingFlags.NonPublic | BindingFlags.Instance);
+                completeAction = (begintalkoverAction)Delegate.CreateDelegate(typeof(chat_manager), anniversaryTipMethod);
+            }
+            if (id == 7001003)
+            {
+                ___changedBGM = true;
+                audio_manager.InstanceAudioManager.PlayBGM("brithday", false);
+            }
+            string @string = data.GetString("image", true);
+            if (data.GetString("loving_effect") == "1")
+            {
+                GameObject obj = UnityEngine.Object.Instantiate<GameObject>(__instance.LovinggoodGameObject, aGameObject.gameObject.transform.position, Quaternion.identity, aGameObject.gameObject.transform);
+                UnityEngine.Object.Destroy(obj, 1f);
+            }
+            if (data.GetString("loving_effect") == "2")
+            {
+                GameObject obj2 = UnityEngine.Object.Instantiate<GameObject>(__instance.LovingbadGameObject, aGameObject.gameObject.transform.position, Quaternion.identity, aGameObject.gameObject.transform);
+                UnityEngine.Object.Destroy(obj2, 1f);
+            }
+            if (@string == "0")
+            {
+                aGameObject.transform.Find("Image").gameObject.transform.GetComponent<Image>().sprite = null;
+                aGameObject.transform.Find("Image").gameObject.SetActive(false);
+            }
+            Sprite sprite = new Sprite();
+            Vector2 anchoredPosition = default(Vector2);
+            string text = data.GetStringLanguage("player", true);
+            if (@string.Contains("son") || @string.Contains("daughter"))
+            {
+                for (int i = 0; i < player_data.GrowSort.Length - 1; i++)
+                {
+                    if (player_data.Instance.Round_current >= player_data.GrowRounds[player_data.GrowSort[i]] && player_data.Instance.Round_current < player_data.GrowRounds[player_data.GrowSort[i + 1]])
+                    {
+                        string text2 = (!@string.Contains("son")) ? "daughter" : "son";
+                        int index = ___chatPlayerList.IndexOf(@string.Replace(text2, "player"));
+                        string str = (!@string.Contains("son")) ? ___chatDaughterLists[i][index].Replace("player", text2) : ___chatPlayerLists[i][index].Replace("player", text2);
+                        sprite = (Resources.Load("UI/Main_ui/chat/" + str, typeof(Sprite)) as Sprite);
+                        break;
+                    }
+                }
+                if (DEF.IsDevelopment)
+                {
+                    string str2 = (!@string.Contains("son")) ? @string.Insert(@string.LastIndexOf("daughter") + 8, "16") : @string.Insert(@string.LastIndexOf("son") + 3, "16");
+                    sprite = (Resources.Load("UI/Main_ui/chat/" + str2, typeof(Sprite)) as Sprite);
+                }
+                anchoredPosition = new Vector2(663f, -540f);
+            }
+            else
+            {
+                string text3 = "UI/Main_ui/chat/" + @string;
+                if (@string.Contains("mom"))
+                {
+                    if (!record_manager.InstanceManagerRecord.IsFather())
+                    {
+                        text3 += "_girl";
+                    }
+                    else
+                    {
+                        text3 = text3 + "_" + record_manager.InstanceManagerRecord.CurrentRecord.mother_id;
+                    }
+                }
+                else if (@string.Contains("father"))
+                {
+                    if (record_manager.InstanceManagerRecord.CurrentRecord.father_name != string.Empty && player_data.Instance.Generations != 1)
+                    {
+                        text3 += "_boy";
+                    }
+                    else
+                    {
+                        text3 = text3 + "_" + record_manager.InstanceManagerRecord.CurrentRecord.father_id;
+                    }
+                }
+                else if (@string.Contains("boy") && BoysManager.Instance.curInviteBoyId != 0)
+                {
+                    text3 = text3 + "_" + BoysManager.Instance.curInviteBoyId;
+                    text = BoysManager.Instance.AllBoys[BoysManager.Instance.curInviteBoyId].name;
+                }
+                sprite = (Resources.Load(text3, typeof(Sprite)) as Sprite);
+                anchoredPosition = new Vector2(-663f, -540f);
+            }
+            Image component = aGameObject.transform.Find("Image").GetComponent<Image>();
+            RectTransform component2 = aGameObject.transform.Find("Image").GetComponent<RectTransform>();
+            component.sprite = sprite;
+            component2.anchoredPosition = anchoredPosition;
+            component2.DOScale(new Vector3(1.15f, 1.15f, 1f), 0f);
+            aGameObject.transform.Find("name/Text").gameObject.GetComponent<Text>().text = text;
+            aGameObject.transform.Find("Text").GetComponent<Text>().text = string.Empty;
+            if (data.GetString("shake") == "1" && !moreText)
+            {
+                aGameObject.transform.Find("inner_bg").DOPunchScale(new Vector3(0.1f, 0.1f, 0f), 0.2f, 1, 0.5f);
+            }
+            if (id == 20001 && !record_manager.InstanceManagerRecord.IsFather())
+            {
+                string str3 = "chat_mom_girl";
+                sprite = (Resources.Load("UI/Main_ui/chat/" + str3, typeof(Sprite)) as Sprite);
+                component.sprite = sprite;
+                aGameObject.transform.Find("name/Text").gameObject.GetComponent<Text>().text = ReadXml.GetString("ChatMother");
+            }
+            component.SetNativeSize();
+            if (data.GetString("graph") == "0")
+            {
+                aGameObject.transform.Find("bg").gameObject.SetActive(false);
+            }
+            else
+            {
+                aGameObject.transform.Find("bg").gameObject.transform.GetComponent<Image>().sprite = (Resources.Load("graph/" + data.GetString("graph"), typeof(Sprite)) as Sprite);
+            }
+            string text4;
+            if (newtext == null)
+            {
+                if (param != string.Empty)
+                {
+                    text4 = string.Format(data.GetStringLanguage("text", true), param);
+                }
+                else
+                {
+                    text4 = data.GetStringLanguage("text", true);
+                }
+            }
+            else
+            {
+                text4 = newtext;
+            }
+            string nextText = string.Empty;
+            if (text4.Contains("@@"))
+            {
+                int num = text4.IndexOf("@@");
+                nextText = text4.Substring(num + 2, text4.Length - num - 2);
+                text4 = text4.Substring(0, num);
+            }
+            Tweener aTweener = aGameObject.transform.Find("Text").gameObject.GetComponent<Text>().DOText(text4, (float)text4.Length * 0.1f, true, ScrambleMode.None, null).SetEase(Ease.Linear);
+            bool doneclik = false;
+            if (!DEF.IsDevelopment)
+            {
+                SpaceController.SpaceAction action = delegate ()
+                {
+                    if (!doneclik)
+                    {
+                        aTweener.timeScale = (float)typeof(chat_manager).GetField("speedUp", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(__instance);
+                        doneclik = true;
+                    }
+                };
+                SpaceController.Instance.SetAction(action);
+            }
+            aTweener.OnUpdate(delegate
+            {
+                if (Input.GetMouseButtonDown(0) && !doneclik)
+                {
+                    aTweener.timeScale = (float)typeof(chat_manager).GetField("speedUp", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(__instance);
+                    doneclik = true;
+                }
+            });
+            int @int = data.GetInt("add_task", true);
+            if (@int != 0)
+            {
+                task_manager.InstancManager.add_task(@int, false);
+                MessageCenter.sendMessage("refresh_ui_data", null);
+            }
+            if (!parentTransform)
+            {
+                if (nextText == string.Empty)
+                {
+                    ___effectId = data.GetInt("effect");
+                    ___nextId = data.GetInt("next_id", true);
+                }
+                else
+                {
+                    ___curId = id;
+                }
+                aTweener.OnComplete(delegate
+                {
+                    typeof(chat_manager).GetField("isOnComplete", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(__instance, true);
+                    aGameObject.transform.Find("next").gameObject.SetActive(true);
+                    typeof(chat_manager).GetField("aGameObject", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(__instance, aGameObject);
+                    typeof(chat_manager).GetField("next", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(__instance, next);
+                    typeof(chat_manager).GetField("next2", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(__instance, next2);
+                    typeof(chat_manager).GetField("nextText", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(__instance, nextText);
+                    typeof(chat_manager).GetField("isAnniversary", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(__instance, isAnniversary);
+                    typeof(chat_manager).GetField("completeAction", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(__instance, completeAction);
+                    aGameObject.transform.GetComponent<Button>().onClick.AddListener(delegate ()
+                    {
+                        typeof(chat_manager).GetMethod("OnChatComplete", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(__instance, new object[0]);
+                    });
+                });
+            }
+            else
+            {
+                aTweener.OnComplete(delegate
+                {
+                });
+                aGameObject.transform.parent = parentTransform;
+                aGameObject.transform.SetAsFirstSibling();
+            }
+
+            // 阻断对原方法的调用
+            return false;
         }
     }
 }
