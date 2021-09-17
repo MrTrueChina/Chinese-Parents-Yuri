@@ -201,25 +201,25 @@ namespace MtC.Mod.ChineseParents.Yuri
         }
     }
 
-    /// <summary>
-    /// 游戏界面的那些按钮的隐藏方法，这个方法会在游戏开始后将所有按钮隐藏掉之后在别的地方按需开启
-    /// </summary>
-    [HarmonyPatch(typeof(open_system), "closeall")]
-    public static class open_system_closeall
-    {
-        private static bool Prefix()
-        {
-            // 如果 Mod 未启动则直接按照游戏原本的逻辑进行调用
-            if (!Main.enabled)
-            {
-                return true;
-            }
+    ///// <summary>
+    ///// 游戏界面的那些按钮的隐藏方法，这个方法会在游戏开始后将所有按钮隐藏掉之后在别的地方按需开启
+    ///// </summary>
+    //[HarmonyPatch(typeof(open_system), "closeall")]
+    //public static class open_system_closeall
+    //{
+    //    private static bool Prefix()
+    //    {
+    //        // 如果 Mod 未启动则直接按照游戏原本的逻辑进行调用
+    //        if (!Main.enabled)
+    //        {
+    //            return true;
+    //        }
 
-            Main.ModEntry.Logger.Log("open_system.closeall 即将调用");
+    //        Main.ModEntry.Logger.Log("open_system.closeall 即将调用");
 
-            return false;
-        }
-    }
+    //        return false;
+    //    }
+    //}
 
     /// <summary>
     /// 女生面板刷新的方法
@@ -464,5 +464,52 @@ namespace MtC.Mod.ChineseParents.Yuri
 
         //    return false;
         //}
+    }
+
+    [HarmonyPatch(typeof(XmlData), "GetInt", new Type[] { typeof(string) })]
+    public static class XmlData_GetInt
+    {
+        private static void Postfix(int __result, string name)
+        {
+            // 如果 Mod 未启动则直接按照游戏原本的逻辑进行调用
+            if (!Main.enabled)
+            {
+                return;
+            }
+
+            // 不是目标
+            if (!("hello_bad".Equals(name)))
+            {
+                return;
+            }
+
+            Main.ModEntry.Logger.Log("XmlData.GetInt(\"hello_bad\") 调用完毕，结果 = " + __result);
+        }
+    }
+
+    [HarmonyPatch(typeof(ReadXml), "GetData")]
+    public static class ReadXml_GetData
+    {
+        private static void Postfix(XmlData __result, string fileName, int id)
+        {
+            // 如果 Mod 未启动则直接按照游戏原本的逻辑进行调用
+            if (!Main.enabled)
+            {
+                return;
+            }
+
+            // 不是目标
+            if (!("chat".Equals(fileName)) || (id != 8200801))
+            {
+                return;
+            }
+
+            Main.ModEntry.Logger.Log("ReadXml.GetData(\"chat\", 8200801) 调用完毕，结果 = " + __result);
+
+            foreach(KeyValuePair<string,string> pair in __result.value)
+            {
+                Main.ModEntry.Logger.Log("遍历结果：key = " + pair.Key + ", value = " + pair.Value);
+            }
+        }
     }
 }
