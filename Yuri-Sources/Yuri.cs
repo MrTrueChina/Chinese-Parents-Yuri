@@ -6,6 +6,7 @@ using HarmonyLib;
 using UnityModManagerNet;
 using System.Reflection;
 using UnityEngine;
+using MtC.Mod.ChineseParents.ForceGirl;
 
 namespace MtC.Mod.ChineseParents.Yuri
 {
@@ -53,76 +54,6 @@ namespace MtC.Mod.ChineseParents.Yuri
         }
     }
 
-    ///// <summary>
-    ///// 功能不确定，怀疑和按钮有关
-    ///// </summary>
-    //[HarmonyPatch(typeof(open_system), "OnEnable")]
-    //public static class open_system_OnEnable
-    //{
-    //    private static bool Prefix(open_system __instance)
-    //    {
-    //        // 如果 Mod 未启动则直接按照游戏原本的逻辑进行调用
-    //        if (!Main.enabled)
-    //        {
-    //            return true;
-    //        }
-
-    //        Main.ModEntry.Logger.Log("open_system.OnEnable 即将调用");
-
-    //        open_system.InstanceOpenSystem = __instance;
-    //        __instance.FacerewardGameObject = __instance.transform.Find("face_reward").gameObject;
-    //        __instance.skillbutton = __instance.transform.Find("panel_mainplay").transform.Find("Toggle_learn").gameObject;
-    //        __instance.taskbutton = __instance.transform.Find("panel_mainplay").transform.Find("Toggle_task").gameObject;
-    //        __instance.ParentdreamGameObject = __instance.transform.Find("panel_parentdream").gameObject;
-    //        __instance.PressureGameObject = __instance.transform.Find("panel_pressure").gameObject;
-    //        __instance.MoneyGameObject = __instance.transform.Find("panel_money").gameObject;
-    //        __instance.ShopGameObject = __instance.transform.Find("button_shop").gameObject;
-    //        __instance.GirlGameObject = __instance.transform.Find("button_girl").gameObject;
-    //        __instance.closeall();
-    //        typeof(open_system).GetMethod("AddListener", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(__instance, new object[0]);
-
-    //        //// 测试一下如果调用两次给社交按钮绑定回调的功能会不会出现两个社交按钮。测试结果：并不会出现两个按钮
-    //        //typeof(open_system).GetMethod("AddListener", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(__instance, new object[0]);
-
-    //        //// 尝试复制一个社交按钮，复制出来了，但是覆盖了回去，疑似这个按钮上有什么动画效果
-    //        //GameObject newGirlButton = GameObject.Instantiate(__instance.GirlGameObject, __instance.GirlGameObject.transform.parent);
-    //        //newGirlButton.transform.localScale *= 3;
-    //        //newGirlButton.SetActive(true);
-    //        //Main.ModEntry.Logger.Log("button_girl.position = " + __instance.GirlGameObject.transform.position);
-    //        //Main.ModEntry.Logger.Log("newGirlButton.position = " + newGirlButton.transform.position);
-
-    //        __instance.GirlGameObject.gameObject.GetComponents<MonoBehaviour>().ToList<MonoBehaviour>().ForEach(component =>
-    //        {
-    //            Main.ModEntry.Logger.Log("社交按钮的组件：" + component.GetType().FullName);
-    //        });
-
-    //        //// 测试一下如果销毁按钮会怎么样。测试结果：成功销毁按钮
-    //        //GameObject.Destroy(__instance.GirlGameObject);
-
-    //        return false;
-    //    }
-
-    //    private static void Postfix()
-    //    {
-    //        // 如果 Mod 未启动则直接返回
-    //        if (!Main.enabled)
-    //        {
-    //            return;
-    //        }
-
-    //        Main.ModEntry.Logger.Log("open_system.OnEnable 调用完毕");
-
-    //        if(TipsManager.instance != null)
-    //        {
-    //            TipsManager.instance.AddTips("open_system.OnEnable 调用完毕", 1);
-    //        }
-    //        else
-    //        {
-    //            Main.ModEntry.Logger.Log("TipsManager.instance = null");
-    //        }
-    //    }
-    //}
-
     /// <summary>
     /// 打开社交窗口的方法，确切地说是给社交按钮绑定打开社交窗口方法的方法
     /// </summary>
@@ -160,8 +91,8 @@ namespace MtC.Mod.ChineseParents.Yuri
                 // 原来的逻辑，点击后如果是儿子则打开女生面板，否则打开男生面板
                 //if (record_manager.InstanceManagerRecord.IsBoy())
 
-                // 修改后的逻辑，单数次点击是按照玩家性别显示，双数次点击是相反的面板
-                if (record_manager.InstanceManagerRecord.IsBoy() ^ anotherSex)
+                // 修改后的逻辑，儿子版依然是只能打开女生面板，女儿版交替显示男生和女生面板
+                if (record_manager.InstanceManagerRecord.IsBoy() || anotherSex)
 
                 ////////----////////----//////// Mod 修改部分 ////////----////////----////////
 
@@ -189,303 +120,143 @@ namespace MtC.Mod.ChineseParents.Yuri
         }
     }
 
-    ///// <summary>
-    ///// 与男生社交后发出恋爱次数警告的方法
-    ///// </summary>
-    //[HarmonyPatch(typeof(open_system), "AlertTalkInPanel")]
-    //public static class open_system_AlertTalkInPanel
-    //{
-    //    private static bool Prefix(open_system __instance, int alertness, begintalkoverAction completeAction)
-    //    {
-    //        // 如果 Mod 未启动则直接按照游戏原本的逻辑进行调用
-    //        if (!Main.enabled)
-    //        {
-    //            return true;
-    //        }
+    /// <summary>
+    /// 开新周目时生成数据的方法，里面有制作组说过的二周目性别和一周目相反的代码
+    /// </summary>
+    [HarmonyPatch(typeof(end_panel_info), "reset_record")]
+    public static class end_panel_info_reset_record
+    {
+        private static void Postfix()
+        {
+            // 如果 Mod 未启动则直接按照游戏原本的逻辑进行调用
+            if (!Main.enabled)
+            {
+                return;
+            }
 
-    //        Main.ModEntry.Logger.Log("open_system.AlertTalkInPanel(" + alertness + ", " + completeAction.Method.Name + ") 即将调用");
+            Main.ModEntry.Logger.Log("生成新周目玩家数据方法即将调用");
 
-    //        if (TipsManager.instance != null)
-    //        {
-    //            TipsManager.instance.AddTips("open_system.AlertTalkInPanel(" + alertness + ", " + completeAction.Method.Name + ") 即将调用", 1);
-    //        }
+            // 周目是儿子则不处理
+            if (record_manager.InstanceManagerRecord.CurrentRecord.playerSex == 2)
+            {
+                Main.ModEntry.Logger.Log("新周目是儿子，不进行处理");
+                return;
+            }
 
-    //        return true;
-    //    }
-    //}
+            Main.ModEntry.Logger.Log("新周目是女儿，填充儿子独有的朋友给女儿");
 
-    ///// <summary>
-    ///// 打开男生面板时发出恋爱次数警告的方法
-    ///// </summary>
-    //[HarmonyPatch(typeof(open_system), "alert_talk")]
-    //public static class open_system_alert_talk
-    //{
-    //    private static bool Prefix(open_system __instance, int alertness, GameObject panel)
-    //    {
-    //        // 如果 Mod 未启动则直接按照游戏原本的逻辑进行调用
-    //        if (!Main.enabled)
-    //        {
-    //            return true;
-    //        }
+            // 反编译出的代码，目测是所有可能登场的朋友的列表，男女根据需要使用一部分
+            List<int> idlist = ReadXml.GetIDList("friend", null, null);
 
-    //        Main.ModEntry.Logger.Log("open_system.alert_talk(" + alertness + ", " + panel.name + ") 即将调用");
+            // 反编译出的循环，原逻辑是根据性别填充
+            foreach (int num2 in idlist)
+            {
+                XmlData data = ReadXml.GetData("friend", num2);
+                int @int = data.GetInt("sex");
 
-    //        if (TipsManager.instance != null)
-    //        {
-    //            TipsManager.instance.AddTips("open_system.alert_talk(" + alertness + ", " + panel.name + ") 即将调用", 1);
-    //        }
+                // 原本的逻辑，0 推测是一个特殊角色，其他的是按照性别填入的
+                //if (@int == 0 || @int == record_manager.InstanceManagerRecord.CurrentRecord.playerSex)
 
-    //        return true;
-    //    }
-    //}
+                // 在原本的条件上，如果是儿子的朋友，而且在列表里没有的话，就加进去。因为这个逻辑的女儿部分在原方法就执行过，这里只要补上儿子独有的就行
+                if ((@int == 0 || @int == 1) && !record_manager.InstanceManagerRecord.CurrentRecord.FriendlistDictionary.ContainsKey(num2))
+                {
+                    record_manager.InstanceManagerRecord.CurrentRecord.FriendlistDictionary.Add(num2, data.GetInt("init"));
+                }
+            }
+        }
+    }
 
-    //[HarmonyPatch(typeof(open_system), "closeall")]
-    //public static class open_system_closeall
-    //{
-    //    private static bool Prefix(open_system __instance)
-    //    {
-    //        // 如果 Mod 未启动则直接按照游戏原本的逻辑进行调用
-    //        if (!Main.enabled)
-    //        {
-    //            return true;
-    //        }
+    /// <summary>
+    /// 在开新档时生成新的玩家数据的方法
+    /// </summary>
+    [HarmonyPatch(typeof(record_manager), "create_new")]
+    public static class record_manager_create_new
+    {
+        private static void Postfix(ref record __result)
+        {
+            // 如果 Mod 未启动则直接按照游戏原本的逻辑进行调用
+            if (!Main.enabled)
+            {
+                return;
+            }
 
-    //        Main.ModEntry.Logger.Log("open_system.closeall 即将调用");
+            Main.ModEntry.Logger.Log("开新档时生成玩家数据方法即将调用");
 
-    //        if (TipsManager.instance != null)
-    //        {
-    //            TipsManager.instance.AddTips("open_system.closeall 即将调用", 1);
-    //        }
+            // 新档是儿子则不处理
+            if (__result.playerSex == 1)
+            {
+                Main.ModEntry.Logger.Log("新档是儿子，不作处理");
+            }
 
-    //        return true;
-    //    }
-    //}
+            Main.ModEntry.Logger.Log("新档是女儿，填充儿子独有的朋友给女儿");
 
-    //[HarmonyPatch(typeof(open_system), "opensystem")]
-    //public static class open_system_opensystem
-    //{
-    //    private static bool Prefix(open_system __instance, GameObject buttonGameObject)
-    //    {
-    //        // 如果 Mod 未启动则直接按照游戏原本的逻辑进行调用
-    //        if (!Main.enabled)
-    //        {
-    //            return true;
-    //        }
+            // 反编译出的代码，目测是所有可能登场的朋友的列表，男女根据需要使用一部分
+            List<int> idlist = ReadXml.GetIDList("friend", null, null);
 
-    //        Main.ModEntry.Logger.Log("open_system.opensystem(" + buttonGameObject.name + ") 即将调用");
+            // 反编译出的循环，原逻辑是根据性别填充
+            foreach (int num in idlist)
+            {
+                XmlData data = ReadXml.GetData("friend", num);
+                int @int = data.GetInt("sex");
 
-    //        if (TipsManager.instance != null)
-    //        {
-    //            TipsManager.instance.AddTips("open_system.opensystem(" + buttonGameObject.name + ") 即将调用", 1);
-    //        }
+                // 原本的逻辑，0 推测是一个特殊角色，其他的是按照性别填入的
+                //if (@int == 0 || @int == __result.playerSex)
 
-    //        return true;
-    //    }
-    //}
+                // 在原本的条件上，如果是儿子的朋友，而且在列表里没有的话，就加进去。因为这个逻辑的女儿部分在原方法就执行过，这里只要补上儿子独有的就行
+                if ((@int == 0 || @int == 1) && !__result.FriendlistDictionary.ContainsKey(num))
+                {
+                    __result.FriendlistDictionary.Add(num, data.GetInt("init"));
+                }
+            }
+        }
+    }
 
-    //[HarmonyPatch(typeof(XmlData), "GetString", new Type[] { typeof(string),typeof(bool) })]
-    //public static class XmlData_GetString_string_bool
-    //{
-    //    private static bool Prefix(ref string __result, string name, bool sex)
-    //    {
-    //        // 如果 Mod 未启动则直接按照游戏原本的逻辑进行调用
-    //        if (!Main.enabled)
-    //        {
-    //            return true;
-    //        }
+    /// <summary>
+    /// 游戏界面的那些按钮的隐藏方法，这个方法会在游戏开始后将所有按钮隐藏掉之后在别的地方按需开启
+    /// </summary>
+    [HarmonyPatch(typeof(open_system), "closeall")]
+    public static class open_system_closeall
+    {
+        private static bool Prefix()
+        {
+            // 如果 Mod 未启动则直接按照游戏原本的逻辑进行调用
+            if (!Main.enabled)
+            {
+                return true;
+            }
 
-    //        Main.ModEntry.Logger.Log("XmlData.GetString(" + name + ", " + sex + ") 即将调用");
+            Main.ModEntry.Logger.Log("open_system.closeall 即将调用");
 
-    //        if (TipsManager.instance != null)
-    //        {
-    //            TipsManager.instance.AddTips("XmlData.GetString(" + name + ", " + sex + ") 即将调用", 1);
-    //        }
+            return false;
+        }
+    }
 
-    //        return true;
-    //    }
-    //}
+    /// <summary>
+    /// 女生面板刷新的方法
+    /// </summary>
+    [HarmonyPatch(typeof(panel_girls), "refresh")]
+    public static class panel_girls_refresh
+    {
+        private static bool Prefix()
+        {
+            // 如果 Mod 未启动则直接按照游戏原本的逻辑进行调用
+            if (!Main.enabled)
+            {
+                return true;
+            }
 
-    //[HarmonyPatch(typeof(XmlData), "GetString", new Type[] { typeof(string) })]
-    //public static class XmlData_GetString_string
-    //{
-    //    private static bool Prefix(ref string __result, string name)
-    //    {
-    //        // 如果 Mod 未启动则直接按照游戏原本的逻辑进行调用
-    //        if (!Main.enabled)
-    //        {
-    //            return true;
-    //        }
+            Main.ModEntry.Logger.Log("panel_girls.refresh 即将调用");
 
-    //        if ()
-
-    //            Main.ModEntry.Logger.Log("XmlData.GetString(" + name + ") 即将调用");
-
-    //        if (TipsManager.instance != null)
-    //        {
-    //            TipsManager.instance.AddTips("XmlData.GetString(" + name + ") 即将调用", 1);
-    //        }
-
-    //        return true;
-    //    }
-    //}
-
-    //[HarmonyPatch(typeof(ReadXml), "GetData")]
-    //public static class XmlData_GetString_string
-    //{
-    //    private static bool Prefix(ref XmlData __result, string fileName, int id)
-    //    {
-    //        // 如果 Mod 未启动则直接按照游戏原本的逻辑进行调用
-    //        if (!Main.enabled)
-    //        {
-    //            return true;
-    //        }
-
-    //        if (!("chat".Equals(fileName)) || id != 8100101)
-    //        {
-    //            return true;
-    //        }
-
-    //        Main.ModEntry.Logger.Log("ReadXml.GetString(" + fileName + ", " + id + ") 即将调用");
-
-    //        if (TipsManager.instance != null)
-    //        {
-    //            TipsManager.instance.AddTips("ReadXml.GetString(" + fileName + ", " + id + ") 即将调用", 1);
-    //        }
-
-    //        return true;
-    //    }
-
-    //    private static void Postfix(ref XmlData __result, string fileName, int id)
-    //    {
-    //        // 如果 Mod 未启动则直接按照游戏原本的逻辑进行调用
-    //        if (!Main.enabled)
-    //        {
-    //            return;
-    //        }
-
-    //        if (!("chat".Equals(fileName)) || id != 8100101)
-    //        {
-    //            return;
-    //        }
-
-    //        Main.ModEntry.Logger.Log("ReadXml.GetString(" + fileName + ", " + id + ") 调用完成，result = " + __result);
-    //        //Main.ModEntry.Logger.Log("__result.GetStringLanguage(\"name\"); = " + __result.GetStringLanguage("name"));
-
-    //        foreach(KeyValuePair<string,string> pair in __result.value)
-    //        {
-    //            Main.ModEntry.Logger.Log("遍历 __result.value.value：key = " + pair.Key + ", value = " + pair.Value);
-    //        }
-
-    //        if (TipsManager.instance != null)
-    //        {
-    //            TipsManager.instance.AddTips("ReadXml.GetString(" + fileName + ", " + id + ") 调用完成，result = " + __result, 1);
-
-    //            //TipsManager.instance.AddTips("__result.GetStringLanguage(\"name\"); = " + __result.GetStringLanguage("name"), 1);
-    //        }
-
-    //        //Main.ModEntry.Logger.Log("data.GetInt(\"type\") = " + data.GetInt("type"));
-    //        //Main.ModEntry.Logger.Log("data.GetString(\"loving_effect\") = " + data.GetString("loving_effect"));
-    //        //Main.ModEntry.Logger.Log("data.GetStringLanguage(\"player\", true) = " + data.GetStringLanguage("player", true));
-    //        //Main.ModEntry.Logger.Log("data.GetStringLanguage(\"text\", true) = " + data.GetStringLanguage("text", true));
-    //        //Main.ModEntry.Logger.Log("data.GetInt(\"add_task\", true) = " + data.GetInt("add_task", true));
-    //        //Main.ModEntry.Logger.Log("data.GetInt(\"effect\") = " + data.GetInt("effect"));
-    //        //Main.ModEntry.Logger.Log("data.GetInt(\"next_id\", true) = " + data.GetInt("next_id", true));
-
-    //        if (__result.value.ContainsKey("text_girl"))
-    //        {
-    //            __result.value["text_girl"] = "text_girl";
-    //        }
-
-    //        //if (__result.value.ContainsKey("add_task_girl"))
-    //        //{
-    //        //    __result.value["add_task_girl"] = "add_task_girl";
-    //        //}
-    //    }
-    //}
-
-    //[HarmonyPatch(typeof(chat_manager), "start_chat")]
-    //public static class chat_manager_start_chat
-    //{
-    //    private static bool Prefix(int id)
-    //    {
-    //        // 如果 Mod 未启动则直接按照游戏原本的逻辑进行调用
-    //        if (!Main.enabled)
-    //        {
-    //            return true;
-    //        }
-
-    //        if (id != 8100101) {
-    //            return true;
-    //        }
-
-    //        Main.ModEntry.Logger.Log("chat_manager.start_chat(" + id + ") 即将调用");
+            foreach(KeyValuePair<int,int> pair in girlmanager.InstanceGirlmanager.GirlsDictionary)
+            {
+                Main.ModEntry.Logger.Log("遍历女同学列表：key = " + pair.Key + ", value = " + pair.Value);
+            }
 
 
 
-    //        XmlData data = ReadXml.GetData("chat", id);
-
-    //        Main.ModEntry.Logger.Log("data.GetInt(\"type\") = " + data.GetInt("type")); 
-    //        Main.ModEntry.Logger.Log("data.GetString(\"loving_effect\") = " + data.GetString("loving_effect"));
-    //        Main.ModEntry.Logger.Log("data.GetStringLanguage(\"player\", true) = " + data.GetStringLanguage("player", true));
-    //        Main.ModEntry.Logger.Log("data.GetStringLanguage(\"text\", true) = " + data.GetStringLanguage("text", true));
-    //        Main.ModEntry.Logger.Log("data.GetInt(\"add_task\", true) = " + data.GetInt("add_task", true));
-    //        Main.ModEntry.Logger.Log("data.GetInt(\"effect\") = " + data.GetInt("effect"));
-    //        Main.ModEntry.Logger.Log("data.GetInt(\"next_id\", true) = " + data.GetInt("next_id", true));
 
 
-    //        if (TipsManager.instance != null)
-    //        {
-    //            TipsManager.instance.AddTips("chat_manager.start_chat(" + id + ") 即将调用", 1);
-    //        }
-
-    //        return true;
-    //    }
-    //}
-
-    //[HarmonyPatch(typeof(XmlData), "GetStringLanguage",new Type[] { typeof(string)})]
-    //public static class XmlData_GetStringLanguage_string
-    //{
-    //    private static bool Prefix(ref string __result, string name)
-    //    {
-    //        // 如果 Mod 未启动则直接按照游戏原本的逻辑进行调用
-    //        if (!Main.enabled)
-    //        {
-    //            return true;
-    //        }
-
-    //        if (!("name".Equals(name)))
-    //        {
-    //            return true;
-    //        }
-
-    //        Main.ModEntry.Logger.Log("XmlData.GetString(" + name + ") 即将调用");
-
-    //        if (TipsManager.instance != null)
-    //        {
-    //            TipsManager.instance.AddTips("XmlData.GetString(" + name + ") 即将调用", 1);
-    //        }
-
-    //        return true;
-    //    }
-    //    private static void Postfix(ref string __result, string name)
-    //    {
-    //        // 如果 Mod 未启动则直接按照游戏原本的逻辑进行调用
-    //        if (!Main.enabled)
-    //        {
-    //            return;
-    //        }
-
-    //        if (!("name".Equals(name)))
-    //        {
-    //            return;
-    //        }
-
-    //        Main.ModEntry.Logger.Log("XmlData.GetString(" + name + ") 调用完成，result = " + __result);
-
-    //        if (TipsManager.instance != null)
-    //        {
-    //            TipsManager.instance.AddTips("XmlData.GetString(" + name + ") 调用完成，result = " + __result, 1);
-    //        }
-    //    }
-    //}
+            return false;
+        }
+    }
 }
