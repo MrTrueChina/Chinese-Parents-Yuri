@@ -68,38 +68,31 @@ namespace MtC.Mod.ChineseParents.Yuri
         /// </summary>
         public static bool anotherSex = false;
 
-        private static bool Prefix(open_system __instance)
+        private static void Postfix(open_system __instance)
         {
             // 如果 Mod 未启动则直接按照游戏原本的逻辑进行调用
             if (!Main.enabled)
             {
-                return true;
+                return;
             }
 
-            Main.ModEntry.Logger.Log("open_system.AddListener 即将调用");
+            Main.ModEntry.Logger.Log("open_system.AddListener 调用完毕");
 
-            if (TipsManager.instance != null)
+            // 如果当前这代是儿子，不进行处理
+            if (record_manager.InstanceManagerRecord.IsBoy())
             {
-                TipsManager.instance.AddTips("open_system.AddListener 即将调用", 1);
+                Main.ModEntry.Logger.Log("这一代是儿子，不进行处理");
+                return;
             }
 
-            // 以下代码直接复制粘贴自反编译
+            // 给社交按钮的点击事件绑定打开面板的方法
             EventTriggerListener.Get(__instance.GirlGameObject).onClick = delegate (GameObject go)
             {
                 int alertness;
                 GameObject panel;
-
-                ////////----////////----//////// Mod 修改部分 ////////----////////----////////
-
-                // 原来的逻辑，点击后如果是儿子则打开女生面板，否则打开男生面板
-                //if (record_manager.InstanceManagerRecord.IsBoy())
-
-                // 修改后的逻辑，儿子版依然是只能打开女生面板，女儿版交替显示男生和女生面板
-                if (record_manager.InstanceManagerRecord.IsBoy() || anotherSex)
-
-                ////////----////////----//////// Mod 修改部分 ////////----////////----////////
-
-                // 以下代码直接复制粘贴自反编译
+                
+                // 如果是打开相反性别的社交面板，则打开女生面板，否则打开男生面板
+                if (anotherSex)
                 {
                     alertness = girlmanager.InstanceGirlmanager.alertness;
                     panel = (Resources.Load("UI/girls/Panel_girls") as GameObject);
@@ -111,15 +104,9 @@ namespace MtC.Mod.ChineseParents.Yuri
                 }
                 __instance.alert_talk(alertness, panel);
 
-                ////////----////////----//////// Mod 修改部分 ////////----////////----////////
-
                 // 每次点击更新是否显示相反性别的标志量
                 anotherSex = !anotherSex;
-
-                ////////----////////----//////// Mod 修改部分 ////////----////////----////////
             };
-
-            return false;
         }
     }
 
@@ -214,25 +201,25 @@ namespace MtC.Mod.ChineseParents.Yuri
         }
     }
 
-    ///// <summary>
-    ///// 游戏界面的那些按钮的隐藏方法，这个方法会在游戏开始后将所有按钮隐藏掉之后在别的地方按需开启
-    ///// </summary>
-    //[HarmonyPatch(typeof(open_system), "closeall")]
-    //public static class open_system_closeall
-    //{
-    //    private static bool Prefix()
-    //    {
-    //        // 如果 Mod 未启动则直接按照游戏原本的逻辑进行调用
-    //        if (!Main.enabled)
-    //        {
-    //            return true;
-    //        }
+    /// <summary>
+    /// 游戏界面的那些按钮的隐藏方法，这个方法会在游戏开始后将所有按钮隐藏掉之后在别的地方按需开启
+    /// </summary>
+    [HarmonyPatch(typeof(open_system), "closeall")]
+    public static class open_system_closeall
+    {
+        private static bool Prefix()
+        {
+            // 如果 Mod 未启动则直接按照游戏原本的逻辑进行调用
+            if (!Main.enabled)
+            {
+                return true;
+            }
 
-    //        Main.ModEntry.Logger.Log("open_system.closeall 即将调用");
+            Main.ModEntry.Logger.Log("open_system.closeall 即将调用");
 
-    //        return false;
-    //    }
-    //}
+            return false;
+        }
+    }
 
     /// <summary>
     /// 女生面板刷新的方法
@@ -253,6 +240,7 @@ namespace MtC.Mod.ChineseParents.Yuri
             // 如果当前这代是儿子，不进行处理
             if (record_manager.InstanceManagerRecord.IsBoy())
             {
+                Main.ModEntry.Logger.Log("这一代是儿子，不进行处理");
                 return;
             }
 
