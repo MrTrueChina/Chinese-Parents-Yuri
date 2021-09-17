@@ -7,6 +7,9 @@ using UnityModManagerNet;
 using System.Reflection;
 using UnityEngine;
 using MtC.Mod.ChineseParents.ForceGirl;
+using UnityEngine.UI;
+using Spine.Unity;
+using DG.Tweening;
 
 namespace MtC.Mod.ChineseParents.Yuri
 {
@@ -237,7 +240,7 @@ namespace MtC.Mod.ChineseParents.Yuri
     [HarmonyPatch(typeof(panel_girls), "refresh")]
     public static class panel_girls_refresh
     {
-        private static bool Prefix()
+        private static bool Prefix(panel_girls __instance, List<GameObject> ___list, GameObject ___girl, XmlList ___girlList, ScrollRect ___scroll, GameObject ___infoPanel, Image[] ___bgButtons, Button ___close)
         {
             // 如果 Mod 未启动则直接按照游戏原本的逻辑进行调用
             if (!Main.enabled)
@@ -247,13 +250,159 @@ namespace MtC.Mod.ChineseParents.Yuri
 
             Main.ModEntry.Logger.Log("panel_girls.refresh 即将调用");
 
+            // 测试功能，遍历女同学列表
             foreach(KeyValuePair<int,int> pair in girlmanager.InstanceGirlmanager.GirlsDictionary)
             {
                 Main.ModEntry.Logger.Log("遍历女同学列表：key = " + pair.Key + ", value = " + pair.Value);
             }
 
+            // 获取编译器生成的私有内部类 <refresh>c__AnonStorey1，这个类在反编译器中一般是默认隐藏的，需要开启编译器的显示自动生成的类功能
+            Type type_c__AnonStorey1 = typeof(panel_girls).GetNestedType("<refresh>c__AnonStorey1", BindingFlags.NonPublic);
+
+            // 创建 <refresh>c__AnonStorey1 的实例
+            Activator.CreateInstance(type_c__AnonStorey1, new object[] { });
+
+            // 这里应该是清除已有的选项，就是所有的女同学
+            for (int i = 0; i < ___list.Count; i++)
+            {
+                UnityEngine.Object.Destroy(___list[i]);
+            }
+            ___list.Clear();
+
+            int num = 0;
+            using (Dictionary<int, int>.Enumerator enumerator = girlmanager.InstanceGirlmanager.GirlsDictionary.GetEnumerator())
+            {
+                while (enumerator.MoveNext())
+                {
+                    // 发现这个对象在代码里几乎就是个数据中转站，而且都是从这个方法里中转的，把那些中转去掉后就剩下这一行创建对象了，不知道是为什么
+                    object c__AnonStorey = Activator.CreateInstance(type_c__AnonStorey1, new object[] { });
+
+                    GameObject item = UnityEngine.Object.Instantiate<GameObject>(___girl, ___bgButtons[num].transform);
+                    ___list.Add(item);
+                    item.name = enumerator.Current.Key.ToString();
+                    GameObject gameObject = item.transform.Find("Button_Name").gameObject;
+                    Text component = gameObject.transform.Find("Text_Name").GetComponent<Text>();
+                    Image component2 = item.transform.Find("head").GetComponent<Image>();
+                    Text component3 = item.transform.Find("loving").GetComponent<Text>();
+                    SkeletonGraphic talkSpine = item.transform.Find("TalkBubble").GetComponent<SkeletonGraphic>();
+                    SkeletonGraphic heartSpine = item.transform.Find("Heart").GetComponent<SkeletonGraphic>();
+                    if (enumerator.Current.Value >= 30)
+                    {
+                        heartSpine.gameObject.SetActive(true);
+                        item.transform.Find("NormalHeart").gameObject.SetActive(false);
+                    }
+                    XmlData xmlData = ___girlList.Get(enumerator.Current.Key);
+                    component.text = xmlData.GetStringLanguage("name");
+                    component2.sprite = (Resources.Load("UI/girls/" + xmlData.GetString("head"), typeof(Sprite)) as Sprite);
+                    component2.SetNativeSize();
+                    component3.text = enumerator.Current.Value.ToString();
+                    XmlData itemData = ___girlList.Get(int.Parse(item.name));
+                    ScrollRectListener gameObject2 = ScrollRectListener.GetGameObject(___bgButtons[num].gameObject);
+                    gameObject2.SetScrollRect(___scroll);
+                    EventTriggerListener.Get(___bgButtons[num].gameObject).onClick = delegate (GameObject go)
+                    {
+                        MonoBehaviour.print(" ScrollRectListener.Get(bgButtons[index].gameObject).onClick");
+                        if (!__instance.is_talk(int.Parse(item.name)))
+                        {
+                            chat_manager.InstanceChatManager.start_chat(itemData.GetInt("hello_bad"), 0, 0, null, null, null, string.Empty, false, false);
+                        }
+                        else if (player_data.Instance.Potentiality >= (float)typeof(panel_girls).GetField("need_potential", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null))
+                        {
+                            player_data.Instance.Potentiality -= (float)typeof(panel_girls).GetField("need_potential", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
+
+                            __instance.chatPanel(int.Parse(item.name));
+                            MessageCenter.sendMessage("refresh_ui_data", null);
+                        }
+                        else
+                        {
+                            TipsManager.instance.AddTips(ReadXml.GetString("PotentialityNotEnough"), 1);
+                        }
+                    };
+                    EventTriggerListener.Get(___bgButtons[num].gameObject).onEnter = delegate (GameObject go)
+                    {
+                        talkSpine.gameObject.SetActive(true);
+                        lzhspine.change_anim_ui(talkSpine, talkSpine.SkeletonDataAsset, "animation", true, null);
+                        int num2 = 0;
+                        if (enumerator.Current.Value >= 30)
+                        {
+                            num2 = 1;
+                        }
+                        else if (enumerator.Current.Value >= 50)
+                        {
+                            num2 = 2;
+                        }
+                        else if (enumerator.Current.Value >= 80)
+                        {
+                            num2 = 3;
+                        }
+                        if (num2 > 0)
+                        {
+                            heartSpine.timeScale = (float)num2;
+                            lzhspine.change_anim_ui2(heartSpine, heartSpine.SkeletonDataAsset, "play", true);
+                        }
+                        go.transform.Find("Image_Light").GetComponent<Image>().DOFade(0.3f, 0.5f);
+                    };
+                    EventTriggerListener.Get(___bgButtons[num].gameObject).onExit = delegate (GameObject go)
+                    {
+                        talkSpine.gameObject.SetActive(false);
+                        if (enumerator.Current.Value >= 30)
+                        {
+                            heartSpine.timeScale = 1f;
+                            lzhspine.change_anim_ui2(heartSpine, heartSpine.SkeletonDataAsset, "idle", true);
+                        }
+                        go.transform.Find("Image_Light").GetComponent<Image>().DOFade(0f, 0.5f);
+                    };
+                    ScrollRectListener gameObject3 = ScrollRectListener.GetGameObject(gameObject);
+                    gameObject3.SetScrollRect(___scroll);
+                    EventTriggerListener.Get(gameObject).onClick = delegate (GameObject go)
+                    {
 
 
+                        ___close.gameObject.SetActive(false);
+                        GameObject info = UnityEngine.Object.Instantiate<GameObject>(___infoPanel, __instance.transform);
+                        info.GetComponent<Button>().onClick.AddListener(delegate ()
+                        {
+
+
+                            ___close.gameObject.SetActive(true);
+                            UnityEngine.Object.DestroyObject(info);
+                        });
+                        info.transform.Find("head").GetComponent<Image>().sprite = (Resources.Load("UI/girls/" + itemData.GetString("image_info"), typeof(Sprite)) as Sprite);
+                        info.transform.Find("name").GetComponent<Text>().text = itemData.GetStringLanguage("name");
+                        info.transform.Find("desc").GetComponent<Text>().text = itemData.GetStringLanguage("desc");
+                    };
+                    num++;
+                }
+            }
+            int[] array = new int[]
+            {
+                27,
+                28,
+                28,
+                29,
+                29
+            };
+            for (int j = 4; j <= 8; j++)
+            {
+                if (___list[j] == null)
+                {
+                    return false;
+                }
+                if (player_data.Instance.Round_current >= array[j - 4])
+                {
+                    ___list[j].gameObject.SetActive(true);
+                    if (j == 8)
+                    {
+                        ___bgButtons[8].gameObject.SetActive(true);
+                        ___scroll.vertical = true;
+                    }
+                }
+                else
+                {
+                    ___bgButtons[j].raycastTarget = false;
+                    ___list[j].gameObject.SetActive(false);
+                }
+            }
 
 
             return false;
