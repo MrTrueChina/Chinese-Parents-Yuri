@@ -176,11 +176,12 @@ namespace MtC.Mod.ChineseParents.Yuri
             if (__result.playerSex == 1)
             {
                 Main.ModEntry.Logger.Log("新档是儿子，不作处理");
+                return;
             }
 
-            Main.ModEntry.Logger.Log("新档是女儿，填充儿子独有的朋友给女儿");
+            Main.ModEntry.Logger.Log("填充儿子独有的朋友给女儿");
 
-            // 反编译出的代码，目测是所有可能登场的朋友的列表，男女根据需要使用一部分
+            // 反编译出的代码，目测是所有可能登场的朋友的列表，男女根据需要使用一部分，但这个朋友列表并不是社交的男女同学列表
             List<int> idlist = ReadXml.GetIDList("friend", null, null);
 
             // 反编译出的循环，原逻辑是根据性别填充
@@ -197,6 +198,14 @@ namespace MtC.Mod.ChineseParents.Yuri
                 {
                     __result.FriendlistDictionary.Add(num, data.GetInt("init"));
                 }
+            }
+
+            Main.ModEntry.Logger.Log("给女儿设置女同学列表");
+            // 反编译出的代码，本来是儿子才会执行的，填充女同学列表
+            record_manager.InstanceManagerRecord.CurrentRecord.GirlsDictionary = new Dictionary<int, int>();
+            foreach (int key in ReadXml.GetIDList("girl", null, null))
+            {
+                record_manager.InstanceManagerRecord.CurrentRecord.GirlsDictionary.Add(key, 0);
             }
         }
     }
@@ -907,6 +916,7 @@ namespace MtC.Mod.ChineseParents.Yuri
             if (record_manager.InstanceManagerRecord.IsBoy())
             {
                 Main.ModEntry.Logger.Log("这一代是儿子，不作处理");
+                return;
             }
 
             // 原本调用的时候就是无视性别的，不作处理
@@ -937,6 +947,7 @@ namespace MtC.Mod.ChineseParents.Yuri
         //    //if (record_manager.InstanceManagerRecord.IsBoy())
         //    //{
         //    //    Main.ModEntry.Logger.Log("这一代是儿子，不作处理");
+        //    //    retun;
         //    //}
 
         //    //// 不是目标，不作处理
@@ -956,5 +967,98 @@ namespace MtC.Mod.ChineseParents.Yuri
         //    //// 替换为不使用性别的读取方式
         //    //__result = __instance.GetStringLanguage("player_girl", false);
         //}
+    }
+
+    //[HarmonyPatch(typeof(girlmanager), "Start")]
+    //public static class girlmanager_init
+    //{
+    //    private static bool Prefix(girlmanager __instance)
+    //    {
+    //        // 如果 Mod 未启动则直接按照游戏原本的逻辑进行调用
+    //        if (!Main.enabled)
+    //        {
+    //            return true;
+    //        }
+
+    //        Main.ModEntry.Logger.Log("girlmanager.Start 即将调用");
+
+    //        //// 这一代是儿子则不处理
+    //        //if (record_manager.InstanceManagerRecord.IsBoy())
+    //        //{
+    //        //    Main.ModEntry.Logger.Log("这一代是儿子，不作处理");
+    //        //    return true;
+    //        //}
+
+    //        girlmanager.InstanceGirlmanager = __instance;
+    //        if (record_manager.InstanceManagerRecord.CurrentRecord.GirlsDictionary.Count == 0)
+    //        {
+    //            Main.ModEntry.Logger.Log("girlmanager 进入 init 分支");
+    //            __instance.init();
+    //        }
+    //        else
+    //        {
+    //            Main.ModEntry.Logger.Log("girlmanager 没有进入 init 分支");
+    //            if (!record_manager.InstanceManagerRecord.CurrentRecord.GirlsDictionary.ContainsKey(1008))
+    //            {
+    //                if (DEF.isApproval && record_manager.InstanceManagerRecord.CurrentRecord.round_current > 25)
+    //                {
+    //                    record_manager.InstanceManagerRecord.CurrentRecord.GirlsDictionary.Add(1008, 100);
+    //                }
+    //                else
+    //                {
+    //                    record_manager.InstanceManagerRecord.CurrentRecord.GirlsDictionary.Add(1008, 0);
+    //                }
+    //            }
+    //            __instance.GirlsDictionary = new Dictionary<int, int>();
+    //            foreach (KeyValuePair<int, int> keyValuePair in record_manager.InstanceManagerRecord.CurrentRecord.GirlsDictionary)
+    //            {
+    //                if (DEF.isApproval && record_manager.InstanceManagerRecord.CurrentRecord.round_current > 25)
+    //                {
+    //                    girlmanager.InstanceGirlmanager.GirlsDictionary.Add(keyValuePair.Key, 100);
+    //                }
+    //                else
+    //                {
+    //                    girlmanager.InstanceGirlmanager.GirlsDictionary.Add(keyValuePair.Key, keyValuePair.Value);
+    //                }
+    //            }
+    //        }
+
+    //        return false;
+    //    }
+    //}
+
+    /// <summary>
+    /// 保存游戏时调用的方法
+    /// </summary>
+    [HarmonyPatch(typeof(record_manager), "saverecord")]
+    public static class record_manager_saverecord
+    {
+        private static void Postfix(record_manager __instance)
+        {
+            // 如果 Mod 未启动则直接按照游戏原本的逻辑进行调用
+            if (!Main.enabled)
+            {
+                return;
+            }
+
+            Main.ModEntry.Logger.Log("保存游戏方法调用结束");
+
+            // 这一代是儿子则不处理
+            if (record_manager.InstanceManagerRecord.IsBoy())
+            {
+                Main.ModEntry.Logger.Log("这一代是儿子，不作处理");
+                return;
+            }
+
+            Main.ModEntry.Logger.Log("保存游戏，补充女生列表");
+
+            // 清空女生列表，从女生数据里重新存入
+            __instance.CurrentRecord.GirlsDictionary.Clear();
+            foreach (KeyValuePair<int, int> keyValuePair7 in girlmanager.InstanceGirlmanager.GirlsDictionary)
+            {
+                Main.ModEntry.Logger.Log("遍历女生列表，id = " + keyValuePair7.Key + ", 好感 = " + keyValuePair7.Value);
+                __instance.CurrentRecord.GirlsDictionary.Add(keyValuePair7.Key, keyValuePair7.Value);
+            }
+        }
     }
 }
