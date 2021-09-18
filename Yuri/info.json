@@ -3,6 +3,10 @@
     "DisplayName": "百合 - Yuri",
     "Author": "Mr.true.China",
     "Version": "1.0.0",
+    "LoadAfter": [
+        "MtC.Mod.ChineseParents.ForceGirl",
+        "MtC.Mod.ChineseParent.RemoveDateAlert"
+    ],
     "AssemblyName": "Yuri.dll",
     "EntryMethod": "MtC.Mod.ChineseParents.Yuri.Main.Load"
 }

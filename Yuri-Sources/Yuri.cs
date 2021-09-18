@@ -156,6 +156,8 @@ namespace MtC.Mod.ChineseParents.Yuri
         }
     }
 
+    ////////--------////////--------//////// 同步儿子版的开局数据给女儿版（可能不是必须的）、让女儿版可以保存女同学好感度（可能不是必须的） ////////--------////////--------////////
+
     /// <summary>
     /// 在开新档时生成新的玩家数据的方法
     /// </summary>
@@ -852,6 +854,11 @@ namespace MtC.Mod.ChineseParents.Yuri
         }
     }
 
+    ////////--------////////--------//////// 让女儿版和女生的社交文本像儿子版一样正常显示 ////////--------////////--------////////
+
+    /// <summary>
+    /// 获取多语种字符串的方法，几乎所有显示的文本都来自这个方法
+    /// </summary>
     [HarmonyPatch(typeof(XmlData), "GetStringLanguage", new Type[] { typeof(string), typeof(bool) })]
     public static class XmlData_GetStringLanguage_name_sex
     {
@@ -914,6 +921,8 @@ namespace MtC.Mod.ChineseParents.Yuri
         }
     }
 
+    ////////--------////////--------//////// 让女儿版可以保存女同学好感度 ////////--------////////--------////////
+
     /// <summary>
     /// 保存游戏时调用的方法
     /// </summary>
@@ -946,6 +955,64 @@ namespace MtC.Mod.ChineseParents.Yuri
                 Main.ModEntry.Logger.Log("遍历女生列表，id = " + keyValuePair7.Key + ", 好感 = " + keyValuePair7.Value);
                 __instance.CurrentRecord.GirlsDictionary.Add(keyValuePair7.Key, keyValuePair7.Value);
             }
+        }
+    }
+
+    ////////--------////////--------//////// 同步男女社交面板的警告值 ////////--------////////--------////////
+
+    /// <summary>
+    /// 女生面板增加恋爱警告值的方法，这个方法会随机增加一定量的恋爱警告值，恋爱警告会根据警告值出现
+    /// </summary>
+    [HarmonyPatch(typeof(panel_girls), "add_alert")]
+    public static class panel_girls_add_alert
+    {
+        private static void Postfix()
+        {
+            // 如果 Mod 没有启动，不进行处理
+            if (!Main.enabled)
+            {
+                return;
+            }
+
+            // 这一代是儿子则不处理
+            if (record_manager.InstanceManagerRecord.IsBoy())
+            {
+                Main.ModEntry.Logger.Log("这一代是儿子，不作处理");
+                return;
+            }
+
+            Main.ModEntry.Logger.Log("女生面板增加恋爱警告值方法调用完毕");
+
+            // 将女生面板的警告值同步到男生面板
+            BoysManager.Instance.alertness = girlmanager.InstanceGirlmanager.alertness;
+        }
+    }
+
+    /// <summary>
+    /// 男生面板增加恋爱警告值的方法，这个方法和女生面板一样随机增加警告值。另外一提，这个方法在原代码中还负责继续向后调用
+    /// </summary>
+    [HarmonyPatch(typeof(BoysManager), "AddAlert")]
+    public static class BoysManager_AddAlert
+    {
+        private static void Postfix(BoysManager __instance)
+        {
+            // 如果 Mod 没有启动，不进行处理
+            if (!Main.enabled)
+            {
+                return;
+            }
+
+            // 这一代是儿子则不处理
+            if (record_manager.InstanceManagerRecord.IsBoy())
+            {
+                Main.ModEntry.Logger.Log("这一代是儿子，不作处理");
+                return;
+            }
+
+            Main.ModEntry.Logger.Log("男生面板增加恋爱警告值方法调用完毕");
+
+            // 将男生面板的警告值同步到女生面板
+            girlmanager.InstanceGirlmanager.alertness = BoysManager.Instance.alertness;
         }
     }
 }
