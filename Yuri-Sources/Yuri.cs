@@ -870,38 +870,10 @@ namespace MtC.Mod.ChineseParents.Yuri
             }
         }
 
-        private static bool Prefix(out GetStringLanguageParams __state, string name, ref bool sex)
+        private static void Prefix(out GetStringLanguageParams __state, string name, ref bool sex)
         {
-            // 如果 Mod 未启动则不作处理
-            if (!Main.enabled)
-            {
-                // 虽然原则上因为 Mod 未启动不处理的话后缀也不会处理，但为了防止后缀特殊需求还是传递参数
-                __state = new GetStringLanguageParams(name, sex);
-                return true;
-            }
-
-            // 这一代是儿子则不处理
-            if (record_manager.InstanceManagerRecord.IsBoy())
-            {
-                Main.ModEntry.Logger.Log("这一代是儿子，不作处理");
-
-                // 虽然原则上因为这一代是儿子不处理的话后缀也不会处理，但为了防止后缀特殊需求还是传递参数
-                __state = new GetStringLanguageParams(name, sex);
-                return true;
-            }
-
-            // 获取对话的人物名称，而且使用性别区分
-            if (("player".Equals(name) && sex))
-            {
-                Main.ModEntry.Logger.Log("发现获取对话人物名称");
-
-                // 修改为不区分性别
-                sex = false;
-            }
-
-            // 向后缀传递参数，这是因为 XmlData.GetStringLanguageParams 方法内部修改了参数，必须靠这种方式把原始参数保存下来
+            // 向后缀传递参数，虽然后缀也可以像前缀一样用同名参数获取方法参数，但这个方法内部修改了参数，所以需要在前缀备份一份直接发给后缀
             __state = new GetStringLanguageParams(name, sex);
-            return true;
         }
 
         private static void Postfix(XmlData __instance, GetStringLanguageParams __state, ref string __result)
@@ -925,107 +897,22 @@ namespace MtC.Mod.ChineseParents.Yuri
                 return;
             }
 
-            // 如果获取到了文本则不处理
-            if (!"0".Equals(__result))
+            // 如果没获取到文本，使用无视性别的方式再获取一次
+            if ("0".Equals(__result))
             {
+                __result = __instance.GetStringLanguage(__state.name, false);
                 return;
             }
 
-            // 使用无视性别的方式再获取一次
-            __result = __instance.GetStringLanguage(__state.name, false);
+            // 如果是获取对话人物名称，而且返回的是错误的名称，使用无视性别的方式再获取一次
+            List<string> wrongNames = new List<string>() { "女孩1", "女孩2", "女孩3", "女孩4", "女孩5", "女孩6", "女孩7", "女孩8", "女孩9" };
+            if("player".Equals(__state.name) && wrongNames.Contains(__result))
+            {
+                __result = __instance.GetStringLanguage(__state.name, false);
+                return;
+            }
         }
-
-        //private static void Postfix(XmlData __instance, ref string __result, string name, bool sex)
-        //{
-        //    // 如果 Mod 未启动则不作处理
-        //    if (!Main.enabled)
-        //    {
-        //        return;
-        //    }
-
-        //    //// 这一代是儿子则不处理
-        //    //if (record_manager.InstanceManagerRecord.IsBoy())
-        //    //{
-        //    //    Main.ModEntry.Logger.Log("这一代是儿子，不作处理");
-        //    //    retun;
-        //    //}
-
-        //    //// 不是目标，不作处理
-        //    //if (!("player".Equals(name) && sex))
-        //    //{
-        //    //    return;
-        //    //}
-
-        //    // 精确定位中二少女
-        //    if (!"女孩8".Equals(__result))
-        //    {
-        //        return;
-        //    }
-
-        //    Main.ModEntry.Logger.Log("XmlData.GetStringLanguage(" + name + ", " + sex + ") 调用完毕，result = " + __result);
-
-        //    //// 替换为不使用性别的读取方式
-        //    //__result = __instance.GetStringLanguage("player_girl", false);
-        //}
     }
-
-    //[HarmonyPatch(typeof(girlmanager), "Start")]
-    //public static class girlmanager_init
-    //{
-    //    private static bool Prefix(girlmanager __instance)
-    //    {
-    //        // 如果 Mod 未启动则直接按照游戏原本的逻辑进行调用
-    //        if (!Main.enabled)
-    //        {
-    //            return true;
-    //        }
-
-    //        Main.ModEntry.Logger.Log("girlmanager.Start 即将调用");
-
-    //        //// 这一代是儿子则不处理
-    //        //if (record_manager.InstanceManagerRecord.IsBoy())
-    //        //{
-    //        //    Main.ModEntry.Logger.Log("这一代是儿子，不作处理");
-    //        //    return true;
-    //        //}
-
-    //        girlmanager.InstanceGirlmanager = __instance;
-    //        if (record_manager.InstanceManagerRecord.CurrentRecord.GirlsDictionary.Count == 0)
-    //        {
-    //            Main.ModEntry.Logger.Log("girlmanager 进入 init 分支");
-    //            __instance.init();
-    //        }
-    //        else
-    //        {
-    //            Main.ModEntry.Logger.Log("girlmanager 没有进入 init 分支");
-    //            if (!record_manager.InstanceManagerRecord.CurrentRecord.GirlsDictionary.ContainsKey(1008))
-    //            {
-    //                if (DEF.isApproval && record_manager.InstanceManagerRecord.CurrentRecord.round_current > 25)
-    //                {
-    //                    record_manager.InstanceManagerRecord.CurrentRecord.GirlsDictionary.Add(1008, 100);
-    //                }
-    //                else
-    //                {
-    //                    record_manager.InstanceManagerRecord.CurrentRecord.GirlsDictionary.Add(1008, 0);
-    //                }
-    //            }
-    //            __instance.GirlsDictionary = new Dictionary<int, int>();
-    //            foreach (KeyValuePair<int, int> keyValuePair in record_manager.InstanceManagerRecord.CurrentRecord.GirlsDictionary)
-    //            {
-    //                if (DEF.isApproval && record_manager.InstanceManagerRecord.CurrentRecord.round_current > 25)
-    //                {
-    //                    girlmanager.InstanceGirlmanager.GirlsDictionary.Add(keyValuePair.Key, 100);
-    //                }
-    //                else
-    //                {
-    //                    girlmanager.InstanceGirlmanager.GirlsDictionary.Add(keyValuePair.Key, keyValuePair.Value);
-    //                }
-    //            }
-    //        }
-
-    //        return false;
-    //    }
-    //}
 
     /// <summary>
     /// 保存游戏时调用的方法
