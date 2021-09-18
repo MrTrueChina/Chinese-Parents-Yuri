@@ -524,6 +524,8 @@ namespace MtC.Mod.ChineseParents.Yuri
                 return true;
             }
 
+            PrintChatData(id);
+
             // 不是目标
             if (id != 8200801 && id != 8200901)
             {
@@ -844,13 +846,61 @@ namespace MtC.Mod.ChineseParents.Yuri
     [HarmonyPatch(typeof(XmlData), "GetStringLanguage", new Type[] { typeof(string), typeof(bool) })]
     public static class XmlData_GetStringLanguage_name_sex
     {
+        /// <summary>
+        /// 在前后缀之间传递参数的类
+        /// </summary>
+        public class GetStringLanguageParams
+        {
+            public string name;
+            public bool sex;
 
-        private static bool Prefix(string name, ref bool sex)
+            public GetStringLanguageParams(string name, bool sex = false)
+            {
+                this.name = name;
+                this.sex = sex;
+            }
+        }
+
+        private static bool Prefix(out GetStringLanguageParams __state, string name, ref bool sex)
         {
             // 如果 Mod 未启动则不作处理
             if (!Main.enabled)
             {
+                // 虽然原则上因为 Mod 未启动不处理的话后缀也不会处理，但为了防止后缀特殊需求还是传递参数
+                __state = new GetStringLanguageParams(name, sex);
                 return true;
+            }
+
+            // 这一代是儿子则不处理
+            if (record_manager.InstanceManagerRecord.IsBoy())
+            {
+                Main.ModEntry.Logger.Log("这一代是儿子，不作处理");
+
+                // 虽然原则上因为这一代是儿子不处理的话后缀也不会处理，但为了防止后缀特殊需求还是传递参数
+                __state = new GetStringLanguageParams(name, sex);
+                return true;
+            }
+
+            // 获取对话的人物名称，而且使用性别区分
+            if (("player".Equals(name) && sex))
+            {
+                Main.ModEntry.Logger.Log("发现获取对话人物名称");
+
+                // 修改为不区分性别
+                sex = false;
+            }
+
+            // 向后缀传递参数，这是因为 XmlData.GetStringLanguageParams 方法内部修改了参数，必须靠这种方式把原始参数保存下来
+            __state = new GetStringLanguageParams(name, sex);
+            return true;
+        }
+
+        private static void Postfix(XmlData __instance, GetStringLanguageParams __state, ref string __result)
+        {
+            // 如果 Mod 未启动则不作处理
+            if (!Main.enabled)
+            {
+                return;
             }
 
             // 这一代是儿子则不处理
@@ -859,16 +909,20 @@ namespace MtC.Mod.ChineseParents.Yuri
                 Main.ModEntry.Logger.Log("这一代是儿子，不作处理");
             }
 
-            // 不是目标，不作处理
-            if (!("player".Equals(name) && sex))
+            // 原本调用的时候就是无视性别的，不作处理
+            if (!__state.sex)
             {
-                return true;
+                return;
             }
 
-            // 修改为不区分性别
-            sex = false;
+            // 如果获取到了文本则不处理
+            if (!"0".Equals(__result))
+            {
+                return;
+            }
 
-            return true;
+            // 使用无视性别的方式再获取一次
+            __result = __instance.GetStringLanguage(__state.name, false);
         }
 
         //private static void Postfix(XmlData __instance, ref string __result, string name, bool sex)
