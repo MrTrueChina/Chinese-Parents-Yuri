@@ -70,7 +70,7 @@ namespace MtC.Mod.ChineseParents.Yuri
 
         private static void Postfix(open_system __instance)
         {
-            // 如果 Mod 未启动则直接按照游戏原本的逻辑进行调用
+            // 如果 Mod 未启动则不作处理
             if (!Main.enabled)
             {
                 return;
@@ -118,7 +118,7 @@ namespace MtC.Mod.ChineseParents.Yuri
     {
         private static void Postfix()
         {
-            // 如果 Mod 未启动则直接按照游戏原本的逻辑进行调用
+            // 如果 Mod 未启动则不作处理
             if (!Main.enabled)
             {
                 return;
@@ -201,25 +201,25 @@ namespace MtC.Mod.ChineseParents.Yuri
         }
     }
 
-    ///// <summary>
-    ///// 游戏界面的那些按钮的隐藏方法，这个方法会在游戏开始后将所有按钮隐藏掉之后在别的地方按需开启
-    ///// </summary>
-    //[HarmonyPatch(typeof(open_system), "closeall")]
-    //public static class open_system_closeall
-    //{
-    //    private static bool Prefix()
-    //    {
-    //        // 如果 Mod 未启动则直接按照游戏原本的逻辑进行调用
-    //        if (!Main.enabled)
-    //        {
-    //            return true;
-    //        }
+    /// <summary>
+    /// 游戏界面的那些按钮的隐藏方法，这个方法会在游戏开始后将所有按钮隐藏掉之后在别的地方按需开启
+    /// </summary>
+    [HarmonyPatch(typeof(open_system), "closeall")]
+    public static class open_system_closeall
+    {
+        private static bool Prefix()
+        {
+            // 如果 Mod 未启动则直接按照游戏原本的逻辑进行调用
+            if (!Main.enabled)
+            {
+                return true;
+            }
 
-    //        Main.ModEntry.Logger.Log("open_system.closeall 即将调用");
+            Main.ModEntry.Logger.Log("open_system.closeall 即将调用");
 
-    //        return false;
-    //    }
-    //}
+            return false;
+        }
+    }
 
     /// <summary>
     /// 女生面板刷新的方法
@@ -237,12 +237,12 @@ namespace MtC.Mod.ChineseParents.Yuri
 
             Main.ModEntry.Logger.Log("panel_girls.refresh 调用完毕");
 
-            // 如果当前这代是儿子，不进行处理
-            if (record_manager.InstanceManagerRecord.IsBoy())
-            {
-                Main.ModEntry.Logger.Log("这一代是儿子，不进行处理");
-                return;
-            }
+            //// 如果当前这代是儿子，不进行处理
+            //if (record_manager.InstanceManagerRecord.IsBoy())
+            //{
+            //    Main.ModEntry.Logger.Log("这一代是儿子，不进行处理");
+            //    return;
+            //}
 
             // 激活所有按钮背景的接收射线检测功能
             ___bgButtons.ToList().ForEach(button => button.raycastTarget = true);
@@ -524,7 +524,15 @@ namespace MtC.Mod.ChineseParents.Yuri
                 return true;
             }
 
+            // 不是目标
+            if (id != 8200801 && id != 8200901)
+            {
+                return true;
+            }
 
+            Main.ModEntry.Logger.Log("发现目标，进行 ID = " + id + " 的对话");
+
+            // 疑似是试玩版的面子对决特殊处理，15001 是第一次出现面子对决事件，201000001 是第一次出现面子挑战事件
             if (DEF.isApproval && (id == 15001 || id == 201000001))
             {
                 begintalkoverAction begintalkoverAction = completeAction;
@@ -534,6 +542,8 @@ namespace MtC.Mod.ChineseParents.Yuri
                 }
                 return false;
             }
+
+            // 疑似是对开发者的特殊处理，开发者应该可以在另一个位置看对话
             Transform transform;
             if (DEF.IsDevelopment)
             {
@@ -549,41 +559,68 @@ namespace MtC.Mod.ChineseParents.Yuri
                     Debug.Log("transform" + __instance.transform);
                 }
             }
+
+            // aGameObject 目前看来是对话的根物体，之后的大量操作都是从这个 aGameObject 向下搜索进行
             GameObject aGameObject = UnityEngine.Object.Instantiate<GameObject>(___PanelGameObject, transform.position, Quaternion.identity, transform);
+            // 禁用了 "next" 物体，这个物体从名字看应该就是进入下一段对话的功能的物体，但是考虑到对话是按空格或左键都可以向后，这个物体可能并不是按钮
             aGameObject.transform.Find("next").gameObject.SetActive(false);
+            
+            // 获取对话数据
             XmlData data = ReadXml.GetData("chat", id);
+
+            // 与周年纪念日有关，但不确定是什么事件，isAnniversary 翻译过来是“是周年纪念日”，不同于常见的对话 id 和 type 相同，没有 id 7000000 的对话
             if (data.GetInt("type") == 7000000 && !isAnniversary)
             {
                 // XXX：此处不知道对不对
                 MethodInfo anniversaryTipMethod = typeof(chat_manager).GetMethod("AnniversaryTip", BindingFlags.NonPublic | BindingFlags.Instance);
                 completeAction = (begintalkoverAction)Delegate.CreateDelegate(typeof(chat_manager), anniversaryTipMethod);
             }
+
+            // 周年剧情的特殊处理，7001003 是周年剧情
             if (id == 7001003)
             {
                 ___changedBGM = true;
                 audio_manager.InstanceAudioManager.PlayBGM("brithday", false);
             }
+
+            // 获取人物图片信息
             string @string = data.GetString("image", true);
+
+            // 疑似是恋爱对话好结果的处理，代码是创建了一个好结果的物体，然后延迟删除
             if (data.GetString("loving_effect") == "1")
             {
                 GameObject obj = UnityEngine.Object.Instantiate<GameObject>(__instance.LovinggoodGameObject, aGameObject.gameObject.transform.position, Quaternion.identity, aGameObject.gameObject.transform);
                 UnityEngine.Object.Destroy(obj, 1f);
             }
+
+            // 疑似是恋爱对话坏结果的处理，代码是创建了一个坏结果的物体，然后延迟删除
             if (data.GetString("loving_effect") == "2")
             {
                 GameObject obj2 = UnityEngine.Object.Instantiate<GameObject>(__instance.LovingbadGameObject, aGameObject.gameObject.transform.position, Quaternion.identity, aGameObject.gameObject.transform);
                 UnityEngine.Object.Destroy(obj2, 1f);
             }
+
+            // 如果没人物图片，禁用掉人物图片物体
             if (@string == "0")
             {
                 aGameObject.transform.Find("Image").gameObject.transform.GetComponent<Image>().sprite = null;
                 aGameObject.transform.Find("Image").gameObject.SetActive(false);
             }
+
+            // 开始创建人物图片
             Sprite sprite = new Sprite();
             Vector2 anchoredPosition = default(Vector2);
+
+            // 获取玩家名称
             string text = data.GetStringLanguage("player", true);
+            Main.ModEntry.Logger.Log("第一次获取名称文本 = " + text);
+
             if (@string.Contains("son") || @string.Contains("daughter"))
             {
+                // 无从解释，怀疑是跟玩家图片有关的
+                Main.ModEntry.Logger.Log("疑似和玩家图片有关的 if 调用，对话 id = " + id);
+                TipsManager.instance.AddTips("疑似和玩家图片有关的 if 调用，对话 id = " + id, 1);
+
                 for (int i = 0; i < player_data.GrowSort.Length - 1; i++)
                 {
                     if (player_data.Instance.Round_current >= player_data.GrowRounds[player_data.GrowSort[i]] && player_data.Instance.Round_current < player_data.GrowRounds[player_data.GrowSort[i + 1]])
@@ -607,6 +644,9 @@ namespace MtC.Mod.ChineseParents.Yuri
                 string text3 = "UI/Main_ui/chat/" + @string;
                 if (@string.Contains("mom"))
                 {
+                    Main.ModEntry.Logger.Log("疑似和母亲有关的 if 调用，对话 id = " + id);
+                    TipsManager.instance.AddTips("疑似和母亲有关的 if 调用，对话 id = " + id, 1);
+
                     if (!record_manager.InstanceManagerRecord.IsFather())
                     {
                         text3 += "_girl";
@@ -618,6 +658,9 @@ namespace MtC.Mod.ChineseParents.Yuri
                 }
                 else if (@string.Contains("father"))
                 {
+                    Main.ModEntry.Logger.Log("疑似和父亲有关的 if 调用，对话 id = " + id);
+                    TipsManager.instance.AddTips("疑似和父亲有关的 if 调用，对话 id = " + id, 1);
+
                     if (record_manager.InstanceManagerRecord.CurrentRecord.father_name != string.Empty && player_data.Instance.Generations != 1)
                     {
                         text3 += "_boy";
@@ -629,23 +672,34 @@ namespace MtC.Mod.ChineseParents.Yuri
                 }
                 else if (@string.Contains("boy") && BoysManager.Instance.curInviteBoyId != 0)
                 {
+                    Main.ModEntry.Logger.Log("疑似和男生有关的 if 调用，对话 id = " + id);
+                    TipsManager.instance.AddTips("疑似和男生有关的 if 调用，对话 id = " + id, 1);
+
                     text3 = text3 + "_" + BoysManager.Instance.curInviteBoyId;
                     text = BoysManager.Instance.AllBoys[BoysManager.Instance.curInviteBoyId].name;
                 }
+
                 sprite = (Resources.Load(text3, typeof(Sprite)) as Sprite);
                 anchoredPosition = new Vector2(-663f, -540f);
             }
+
+            // 这里开始应该是显示部分
             Image component = aGameObject.transform.Find("Image").GetComponent<Image>();
             RectTransform component2 = aGameObject.transform.Find("Image").GetComponent<RectTransform>();
+            // 这里是左侧的人物图片的初始化
             component.sprite = sprite;
             component2.anchoredPosition = anchoredPosition;
             component2.DOScale(new Vector3(1.15f, 1.15f, 1f), 0f);
+            // 人物名称文本
             aGameObject.transform.Find("name/Text").gameObject.GetComponent<Text>().text = text;
+            // 清空对话框里的文本
             aGameObject.transform.Find("Text").GetComponent<Text>().text = string.Empty;
+            // 对话框的那个弹一下的动画效果
             if (data.GetString("shake") == "1" && !moreText)
             {
                 aGameObject.transform.Find("inner_bg").DOPunchScale(new Vector3(0.1f, 0.1f, 0f), 0.2f, 1, 0.5f);
             }
+            // 第一次领零用钱但由母亲发的对话，20001 是第一次零用钱事件，这个事件在儿子版是父亲发的，女儿版在这里增加了一个母亲发的替换
             if (id == 20001 && !record_manager.InstanceManagerRecord.IsFather())
             {
                 string str3 = "chat_mom_girl";
@@ -654,6 +708,8 @@ namespace MtC.Mod.ChineseParents.Yuri
                 aGameObject.transform.Find("name/Text").gameObject.GetComponent<Text>().text = ReadXml.GetString("ChatMother");
             }
             component.SetNativeSize();
+
+            // 这里应该是对话背景图
             if (data.GetString("graph") == "0")
             {
                 aGameObject.transform.Find("bg").gameObject.SetActive(false);
@@ -662,20 +718,26 @@ namespace MtC.Mod.ChineseParents.Yuri
             {
                 aGameObject.transform.Find("bg").gameObject.transform.GetComponent<Image>().sprite = (Resources.Load("graph/" + data.GetString("graph"), typeof(Sprite)) as Sprite);
             }
+
+            // 疑似是对话框里的文本
             string text4;
             if (newtext == null)
             {
+                // 没有通过 newtext 参数传入对话内容
                 if (param != string.Empty)
                 {
+                    // 通过 param 参数传入内容，对文本进行格式化替换
                     text4 = string.Format(data.GetStringLanguage("text", true), param);
                 }
                 else
                 {
+                    // 没有通过 param 参数传入对话内容，直接获取文本
                     text4 = data.GetStringLanguage("text", true);
                 }
             }
             else
             {
+                // 这里是 newtext 参数传入的对话框内容
                 text4 = newtext;
             }
             string nextText = string.Empty;
@@ -699,6 +761,7 @@ namespace MtC.Mod.ChineseParents.Yuri
                 };
                 SpaceController.Instance.SetAction(action);
             }
+
             aTweener.OnUpdate(delegate
             {
                 if (Input.GetMouseButtonDown(0) && !doneclik)
@@ -707,12 +770,14 @@ namespace MtC.Mod.ChineseParents.Yuri
                     doneclik = true;
                 }
             });
+
             int @int = data.GetInt("add_task", true);
             if (@int != 0)
             {
                 task_manager.InstancManager.add_task(@int, false);
                 MessageCenter.sendMessage("refresh_ui_data", null);
             }
+
             if (!parentTransform)
             {
                 if (nextText == string.Empty)
@@ -752,5 +817,90 @@ namespace MtC.Mod.ChineseParents.Yuri
             // 阻断对原方法的调用
             return false;
         }
+
+        /// <summary>
+        /// 输出对话数据的方法，用于辅助测试
+        /// </summary>
+        /// <param name="id"></param>
+        private static void PrintChatData(int id)
+        {
+            Main.ModEntry.Logger.Log("输出对话数据：id = " + id);
+
+            if(!ReadXml.HaveData("chat", id))
+            {
+                Main.ModEntry.Logger.Log("没有 id " + id + " 的对话数据");
+                return;
+            }
+
+            XmlData data = ReadXml.GetData("chat", id);
+
+            foreach(KeyValuePair<string,string> pair in data.value)
+            {
+                Main.ModEntry.Logger.Log("输出对话数据：id = " + id + ", key = " + pair.Key + ", value = " + pair.Value);
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(XmlData), "GetStringLanguage", new Type[] { typeof(string), typeof(bool) })]
+    public static class XmlData_GetStringLanguage_name_sex
+    {
+
+        private static bool Prefix(string name, ref bool sex)
+        {
+            // 如果 Mod 未启动则不作处理
+            if (!Main.enabled)
+            {
+                return true;
+            }
+
+            // 这一代是儿子则不处理
+            if (record_manager.InstanceManagerRecord.IsBoy())
+            {
+                Main.ModEntry.Logger.Log("这一代是儿子，不作处理");
+            }
+
+            // 不是目标，不作处理
+            if (!("player".Equals(name) && sex))
+            {
+                return true;
+            }
+
+            // 修改为不区分性别
+            sex = false;
+
+            return true;
+        }
+
+        //private static void Postfix(XmlData __instance, ref string __result, string name, bool sex)
+        //{
+        //    // 如果 Mod 未启动则不作处理
+        //    if (!Main.enabled)
+        //    {
+        //        return;
+        //    }
+
+        //    //// 这一代是儿子则不处理
+        //    //if (record_manager.InstanceManagerRecord.IsBoy())
+        //    //{
+        //    //    Main.ModEntry.Logger.Log("这一代是儿子，不作处理");
+        //    //}
+
+        //    //// 不是目标，不作处理
+        //    //if (!("player".Equals(name) && sex))
+        //    //{
+        //    //    return;
+        //    //}
+
+        //    // 精确定位中二少女
+        //    if (!"女孩8".Equals(__result))
+        //    {
+        //        return;
+        //    }
+
+        //    Main.ModEntry.Logger.Log("XmlData.GetStringLanguage(" + name + ", " + sex + ") 调用完毕，result = " + __result);
+
+        //    //// 替换为不使用性别的读取方式
+        //    //__result = __instance.GetStringLanguage("player_girl", false);
+        //}
     }
 }
