@@ -103,6 +103,7 @@
     <Compile Include="RepairGirlLovingChat.cs" />
     <Compile Include="SaveGirlsLoving.cs" />
     <Compile Include="ShowGirlsInBlinddate.cs" />
+    <Compile Include="ShowSonLovingEvent.cs" />
     <Compile Include="SynchronizationAlert.cs" />
     <Compile Include="Yuri.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
