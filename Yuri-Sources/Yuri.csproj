@@ -7,8 +7,8 @@
     <ProjectGuid>{BDE9A689-9949-41D3-BF31-41D8821967BA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>yuri</RootNamespace>
-    <AssemblyName>yuri</AssemblyName>
+    <RootNamespace>MtC.Mod.ChineseParents.Yuri</RootNamespace>
+    <AssemblyName>Yuri</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -59,8 +59,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\ChineseParent\game_Data\Managed\DOTweenPro.dll</HintPath>
     </Reference>
+    <Reference Include="Event-Control-Lib">
+      <HintPath>..\..\Chinese-Parents-Event-Control-Lib\Event-Control-Lib-Sources\bin\Debug\Event-Control-Lib.dll</HintPath>
+    </Reference>
     <Reference Include="Force-Girl">
       <HintPath>..\..\Chinese-Parents-Force-Girl\Force-Girl\Force-Girl.dll</HintPath>
+    </Reference>
+    <Reference Include="Loving-Time-Controller">
+      <HintPath>..\..\Chinese-Parents-Loving-Time-Controller\Loving-Time-Controller-Sources\bin\Debug\Loving-Time-Controller.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -91,6 +97,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddSonFriend.cs" />
+    <Compile Include="AddTransferEvent.cs" />
+    <Compile Include="OpenGirlsPanel.cs" />
+    <Compile Include="RepairGirlLovingChat.cs" />
+    <Compile Include="SaveGirlsLoving.cs" />
+    <Compile Include="ShowGirlsInBlinddate.cs" />
+    <Compile Include="SynchronizationAlert.cs" />
     <Compile Include="Yuri.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

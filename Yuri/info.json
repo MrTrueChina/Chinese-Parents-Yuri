@@ -3,7 +3,11 @@
     "DisplayName": "百合 - Yuri",
     "Author": "Mr.true.China",
     "Version": "1.0.0",
+    "Requirements": [
+        "MtC.Mod.ChineseParents.LovingTimeController"
+    ],
     "LoadAfter": [
+        "MtC.Mod.ChineseParents.LovingTimeController",
         "MtC.Mod.ChineseParents.ForceGirl",
         "MtC.Mod.ChineseParent.RemoveDateAlert"
     ],

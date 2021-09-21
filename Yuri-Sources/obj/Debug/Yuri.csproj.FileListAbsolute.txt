@@ -113,4 +113,7 @@ D:\Projects\Unity-Mod-Manager-Mod\Chinese-Parents\Chinese-Parents-Yuri\Yuri-Sour
 D:\Projects\Unity-Mod-Manager-Mod\Chinese-Parents\Chinese-Parents-Yuri\Yuri-Sources\obj\Debug\Yuri.csproj.CopyComplete
 D:\Projects\Unity-Mod-Manager-Mod\Chinese-Parents\Chinese-Parents-Yuri\Yuri-Sources\obj\Debug\yuri.dll
 D:\Projects\Unity-Mod-Manager-Mod\Chinese-Parents\Chinese-Parents-Yuri\Yuri-Sources\obj\Debug\yuri.pdb
-D:\Projects\Unity-Mod-Manager-Mod\Chinese-Parents\Chinese-Parents-Yuri\Yuri-Sources\obj\Debug\Yuri.csprojAssemblyReference.cache
+D:\Projects\Unity-Mod-Manager-Mod\Chinese-Parents\Chinese-Parents-Yuri\Yuri-Sources\bin\Debug\Event-Control-Lib.dll
+D:\Projects\Unity-Mod-Manager-Mod\Chinese-Parents\Chinese-Parents-Yuri\Yuri-Sources\bin\Debug\Loving-Time-Controller.dll
+D:\Projects\Unity-Mod-Manager-Mod\Chinese-Parents\Chinese-Parents-Yuri\Yuri-Sources\bin\Debug\Event-Control-Lib.pdb
+D:\Projects\Unity-Mod-Manager-Mod\Chinese-Parents\Chinese-Parents-Yuri\Yuri-Sources\bin\Debug\Loving-Time-Controller.pdb
