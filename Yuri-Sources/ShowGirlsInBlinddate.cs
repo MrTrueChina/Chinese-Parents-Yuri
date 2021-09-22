@@ -121,7 +121,10 @@ namespace MtC.Mod.ChineseParents.Yuri
 
             blinddate.desc = "你的闺蜜，毕业后一直和你保持联系，现在是一名旅行作家，在旅行到你所在的城市时被介绍给了你，世界真是小。";
 
-            // 我觉得萌萌应该就是章涵之，至少在定位上差不多，数据用的就是章涵之的数据，正好章涵之的数据很平均
+            // 闺蜜自己的 id，这个是萌萌自己就有的数据
+            blinddate.id = 3008;
+
+            // 我觉得萌萌应该就是章涵之，至少在定位上差不多，萌萌没有的数据用的就是章涵之的数据，正好章涵之的数据很平均
             blinddate.name = "闺蜜-萌萌";
             blinddate.type = 2;
             blinddate.need_status = 15;
@@ -133,7 +136,62 @@ namespace MtC.Mod.ChineseParents.Yuri
             blinddate.stamination_round = 0;
             blinddate.base_winrate = 0;
 
+            foreach (KeyValuePair<int, BoyRecord> pair in BoysManager.Instance.BoysDictionary)
+            {
+                Main.ModEntry.Logger.Log("遍历男生数据，id = " + pair.Key + "" + pair.Value.loving);
+            }
+
             return blinddate;
+        }
+    }
+
+    /// <summary>
+    /// 相亲成功后调用的方法。这里有保存父母信息给下一代的功能，在这里将相亲选中的对象保存为下一代的父亲
+    /// </summary>
+    [HarmonyPatch(typeof(Panel_blinddate), "win_process")]
+    public static class Panel_blinddate_win_process
+    {
+        private static void Prefix(out bool __state)
+        {
+            // 将是否是男孩传递给后缀，这个方法执行过程中似乎会将数据改到下一代，导致后缀获取性别不准
+            __state = record_manager.InstanceManagerRecord.IsBoy();
+        }
+
+        private static void Postfix(Panel_blinddate __instance, bool __state, blinddate myBlinddate)
+        {
+            // 如果 Mod 未启动则不处理
+            if (!Main.enabled)
+            {
+                return;
+            }
+
+            // 如果这一代是儿子则不处理
+            if (__state)
+            {
+                Main.ModEntry.Logger.Log("相亲成功，这一代是儿子，不作处理");
+
+                return;
+            }
+
+            // 如果选择的相亲选项的 id 是同学的 id，则设置父亲 id 为这个 id
+            List<int> classmateIds = new List<int>() { 1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 1009, 3001, 3002, 3003, 3004, 3005, 3006, 3007, 3008, 3009 };
+            if (classmateIds.Contains(myBlinddate.id))
+            {
+                Main.ModEntry.Logger.Log("相亲对象是同学，设置 id，id = " + myBlinddate.id);
+
+                record_manager.InstanceManagerRecord.CurrentRecord.father_id = myBlinddate.id;
+            }
+
+            // 如果父亲 id 是闺蜜的 id，因为闺蜜没有自己的母亲图，改为章涵之的 id
+            if (record_manager.InstanceManagerRecord.CurrentRecord.father_id == 3008)
+            {
+                Main.ModEntry.Logger.Log("相亲成功后父亲 id 被设为了闺蜜的 id，闺蜜没有母亲图，改为章涵之的 id");
+
+                record_manager.InstanceManagerRecord.CurrentRecord.father_id = 1006;
+            }
+
+            // 保存数据，否则这些数据在退出游戏后就会丢失
+            record_manager.InstanceManagerRecord.save_data_override();
         }
     }
 }
