@@ -40,6 +40,9 @@
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\ChineseParent\game_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
+    <Reference Include="Chat-Control-Lib">
+      <HintPath>..\..\Chinese-Parents-Chat-Control-Lib\Chat-Control-Lib-Sources\bin\Debug\Chat-Control-Lib.dll</HintPath>
+    </Reference>
     <Reference Include="DOTween, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\ChineseParent\game_Data\Managed\DOTween.dll</HintPath>
@@ -100,7 +103,8 @@
     <Compile Include="AddSonFriend.cs" />
     <Compile Include="AddTransferEvent.cs" />
     <Compile Include="OpenGirlsPanel.cs" />
-    <Compile Include="RepairGirlLovingChat.cs" />
+    <Compile Include="RepairGirlLovingChatName.cs" />
+    <Compile Include="RepairGirlLovingChatText.cs" />
     <Compile Include="RepairNextGenerationFatherLost.cs" />
     <Compile Include="SaveGirlsLoving.cs" />
     <Compile Include="ShowGirlsInBlinddate.cs" />

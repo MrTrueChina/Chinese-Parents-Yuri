@@ -83,14 +83,17 @@ namespace MtC.Mod.ChineseParents.Yuri
             // 将 Mod Manager 切换的状态保存下来
             enabled = value;
 
-            // 如果是激活 Mod 则修改转校事件，否则取消修改
             if (enabled)
             {
+                // 激活 Mod，补充转校事件、修复女儿版读取不到儿子版独有文本的问题
                 AddTransferEvent.ChangeTransferEvents();
+                RepairGirlLovingChatText.AddRepair();
             }
             else
             {
+                // 关闭 Mod，取消补充转校事件、取消修复女儿版读取不到儿子版独有文本的问题
                 AddTransferEvent.UnchangeTransferEvents();
+                RepairGirlLovingChatText.RemoveRepair();
             }
 
             // 返回 true 表示这个 Mod 切换到 Mod Manager 切换的状态，返回 false 表示 Mod 依然保持原来的状态
@@ -107,9 +110,11 @@ namespace MtC.Mod.ChineseParents.Yuri
             // 保存设置
             settings.Save(modEntry);
 
-            // 取消对转校事件的修改，并用新的配置再次修改（这里是假设恋爱时间控制 Mod 发生了修改）
+            // 取消补充转校事件、修复女儿版读取不到儿子版独有文本的问题，之后重新开启（这里是假设其他 Mod 发生了修改导致这个 Mod 也要修改）
             AddTransferEvent.UnchangeTransferEvents();
+            RepairGirlLovingChatText.RemoveRepair();
             AddTransferEvent.ChangeTransferEvents();
+            RepairGirlLovingChatText.AddRepair();
         }
     }
 }

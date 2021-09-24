@@ -117,3 +117,5 @@ D:\Projects\Unity-Mod-Manager-Mod\Chinese-Parents\Chinese-Parents-Yuri\Yuri-Sour
 D:\Projects\Unity-Mod-Manager-Mod\Chinese-Parents\Chinese-Parents-Yuri\Yuri-Sources\bin\Debug\Loving-Time-Controller.dll
 D:\Projects\Unity-Mod-Manager-Mod\Chinese-Parents\Chinese-Parents-Yuri\Yuri-Sources\bin\Debug\Event-Control-Lib.pdb
 D:\Projects\Unity-Mod-Manager-Mod\Chinese-Parents\Chinese-Parents-Yuri\Yuri-Sources\bin\Debug\Loving-Time-Controller.pdb
+D:\Projects\Unity-Mod-Manager-Mod\Chinese-Parents\Chinese-Parents-Yuri\Yuri-Sources\bin\Debug\Chat-Control-Lib.dll
+D:\Projects\Unity-Mod-Manager-Mod\Chinese-Parents\Chinese-Parents-Yuri\Yuri-Sources\bin\Debug\Chat-Control-Lib.pdb

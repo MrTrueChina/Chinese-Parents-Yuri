@@ -7,7 +7,7 @@ using HarmonyLib;
 namespace MtC.Mod.ChineseParents.Yuri
 {
     /// <summary>
-    /// 获取多语种字符串的方法，几乎所有显示的文本都来自这个方法。女儿版获取儿子版的约会对话会获取错误，在这里进行修复
+    /// 获取多语种字符串的方法，几乎所有显示的文本都来自这个方法。女儿版获取儿子版的女同学名称时会获取错误，在这里进行修复
     /// </summary>
     [HarmonyPatch(typeof(XmlData), "GetStringLanguage", new Type[] { typeof(string), typeof(bool) })]
     public static class XmlData_GetStringLanguage_name_sex
@@ -48,22 +48,15 @@ namespace MtC.Mod.ChineseParents.Yuri
                 return;
             }
 
-            // 原本调用的时候就是无视性别的，不作处理
-            if (!__state.sex)
+            // 不是区分性别的获取对话人物名称，不作处理
+            if (!"player".Equals(__state.name) || !__state.sex)
             {
                 return;
             }
 
-            // 如果没获取到文本，使用无视性别的方式再获取一次
-            if ("0".Equals(__result))
-            {
-                __result = __instance.GetStringLanguage(__state.name, false);
-                return;
-            }
-
-            // 如果是获取对话人物名称，而且返回的是错误的名称，使用无视性别的方式再获取一次
+            // 如果返回的是错误的名称，使用无视性别的方式再获取一次
             List<string> wrongNames = new List<string>() { "女孩1", "女孩2", "女孩3", "女孩4", "女孩5", "女孩6", "女孩7", "女孩8", "女孩9" };
-            if ("player".Equals(__state.name) && wrongNames.Contains(__result))
+            if (wrongNames.Contains(__result))
             {
                 __result = __instance.GetStringLanguage(__state.name, false);
                 return;
