@@ -124,4 +124,3 @@ D:\Projects\Unity-Mod-Manager-Mod\Chinese-Parents\Chinese-Parents-Yuri\Yuri-Sour
 D:\Projects\Unity-Mod-Manager-Mod\Chinese-Parents\Chinese-Parents-Yuri\Yuri-Sources\obj\Debug\Yuri.csproj.CopyComplete
 D:\Projects\Unity-Mod-Manager-Mod\Chinese-Parents\Chinese-Parents-Yuri\Yuri-Sources\obj\Debug\Yuri.dll
 D:\Projects\Unity-Mod-Manager-Mod\Chinese-Parents\Chinese-Parents-Yuri\Yuri-Sources\obj\Debug\Yuri.pdb
-D:\Projects\Unity-Mod-Manager-Mod\Chinese-Parents\Chinese-Parents-Yuri\Yuri-Sources\obj\Debug\Yuri.csprojAssemblyReference.cache

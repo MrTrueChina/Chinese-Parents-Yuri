@@ -34,9 +34,9 @@ namespace MtC.Mod.ChineseParents.Yuri
         /// <param name="originChatData"></param>
         /// <param name="modifiedChatData"></param>
         /// <returns></returns>
-        public static ChatControl.ChatData RepairGirlTextNone(ChatControl.ChatData originChatData, ChatControl.ChatData modifiedChatData)
+        public static ChatData RepairGirlTextNone(ChatData originChatData, ChatData modifiedChatData)
         {
-            ChatControl.ChatData newChatData = modifiedChatData.Copy();
+            ChatData newChatData = modifiedChatData.Copy();
 
             if(newChatData.text_girl == null || newChatData.text_girl.Equals("") || newChatData.text_girl.Equals("0"))
             {
