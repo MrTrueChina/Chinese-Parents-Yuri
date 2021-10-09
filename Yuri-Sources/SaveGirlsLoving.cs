@@ -29,7 +29,7 @@ namespace MtC.Mod.ChineseParents.Yuri
                 return;
             }
 
-            Main.ModEntry.Logger.Log("保存游戏，补充女生列表");
+            Main.ModEntry.Logger.Log("保存游戏，补充女生好感列表");
 
             // 清空女生列表，从女生数据里重新存入
             __instance.CurrentRecord.GirlsDictionary.Clear();

@@ -45,7 +45,7 @@ namespace MtC.Mod.ChineseParents.Yuri
             // 这一代是儿子则不处理
             if (record_manager.InstanceManagerRecord.IsBoy())
             {
-                Main.ModEntry.Logger.Log("这一代是儿子，不作处理");
+                Main.ModEntry.Logger.Log("这一代是儿子，不添加女同学相亲选项");
                 return;
             }
 
@@ -94,8 +94,8 @@ namespace MtC.Mod.ChineseParents.Yuri
                 blinddate blinddate;
                 if (classmates[i].id == 3008)
                 {
-                    // 3008 是闺蜜，原逻辑中她没有相亲数据
-                    blinddate = getConfidanteMengMengBlinddateData();
+                    // 3008 是闺蜜，原逻辑中她没有相亲数据，这里需要给她造一份数据出来
+                    blinddate = GetConfidanteMengMengBlinddateData();
                 }
                 else
                 {
@@ -115,7 +115,7 @@ namespace MtC.Mod.ChineseParents.Yuri
         /// 获取 闺蜜-萌萌 的相亲数据
         /// </summary>
         /// <returns></returns>
-        private static blinddate getConfidanteMengMengBlinddateData()
+        private static blinddate GetConfidanteMengMengBlinddateData()
         {
             blinddate blinddate = new blinddate();
 
@@ -135,11 +135,6 @@ namespace MtC.Mod.ChineseParents.Yuri
             blinddate.memory_round = 2;
             blinddate.stamination_round = 0;
             blinddate.base_winrate = 0;
-
-            foreach (KeyValuePair<int, BoyRecord> pair in BoysManager.Instance.BoysDictionary)
-            {
-                Main.ModEntry.Logger.Log("遍历男生数据，id = " + pair.Key + "" + pair.Value.loving);
-            }
 
             return blinddate;
         }

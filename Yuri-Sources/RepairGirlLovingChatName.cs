@@ -15,7 +15,7 @@ namespace MtC.Mod.ChineseParents.Yuri
         /// <summary>
         /// 在前后缀之间传递参数的类
         /// </summary>
-        public class GetStringLanguageParams
+        internal class GetStringLanguageParams
         {
             public string name;
             public bool sex;
@@ -44,7 +44,6 @@ namespace MtC.Mod.ChineseParents.Yuri
             // 这一代是儿子则不处理
             if (record_manager.InstanceManagerRecord.IsBoy())
             {
-                Main.ModEntry.Logger.Log("这一代是儿子，不作处理");
                 return;
             }
 
