@@ -85,15 +85,23 @@ namespace MtC.Mod.ChineseParents.Yuri
 
             if (enabled)
             {
-                // 激活 Mod，补充转校事件、修复女儿版读取不到儿子版独有文本的问题
+                // 激活 Mod
+                // 补充转校事件
                 AddTransferEvent.ChangeTransferEvents();
+                // 修复女儿版读取不到儿子版独有文本的问题
                 RepairGirlLovingChatText.AddRepair();
+                // 修改女生好感事件中针对于儿子性别的对话文本
+                ChangeGirlsLovingChatToDaughter.AddChange();
             }
             else
             {
-                // 关闭 Mod，取消补充转校事件、取消修复女儿版读取不到儿子版独有文本的问题
+                // 关闭 Mod
+                // 取消补充转校事件
                 AddTransferEvent.UnchangeTransferEvents();
+                // 取消修复女儿版读取不到儿子版独有文本的问题
                 RepairGirlLovingChatText.RemoveRepair();
+                // 取消修改女生好感事件中针对于儿子性别的对话文本
+                ChangeGirlsLovingChatToDaughter.RemoveChange();
             }
 
             // 返回 true 表示这个 Mod 切换到 Mod Manager 切换的状态，返回 false 表示 Mod 依然保持原来的状态
@@ -110,11 +118,16 @@ namespace MtC.Mod.ChineseParents.Yuri
             // 保存设置
             settings.Save(modEntry);
 
-            // 取消补充转校事件、修复女儿版读取不到儿子版独有文本的问题，之后重新开启（这里是假设其他 Mod 发生了修改导致这个 Mod 也要修改）
+            // 对使用了前置 Mod 的功能进行重启（这里是假设其他 Mod 发生了修改导致这个 Mod 也要修改）
+            // 转校事件
             AddTransferEvent.UnchangeTransferEvents();
-            RepairGirlLovingChatText.RemoveRepair();
             AddTransferEvent.ChangeTransferEvents();
+            // 修复女儿版读取不到儿子版独有文本的问题
+            RepairGirlLovingChatText.RemoveRepair();
             RepairGirlLovingChatText.AddRepair();
+            // 修改女生好感事件中针对于儿子性别的对话文本
+            ChangeGirlsLovingChatToDaughter.RemoveChange();
+            ChangeGirlsLovingChatToDaughter.AddChange();
         }
     }
 }

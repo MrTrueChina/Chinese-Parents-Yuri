@@ -36,6 +36,12 @@ namespace MtC.Mod.ChineseParents.Yuri
         /// <returns></returns>
         public static ChatData RepairGirlTextNone(ChatData originChatData, ChatData modifiedChatData)
         {
+            // 当前周目是儿子则不处理
+            if (record_manager.InstanceManagerRecord.CurrentRecord.playerSex == 1)
+            {
+                return modifiedChatData;
+            }
+
             ChatData newChatData = modifiedChatData.Copy();
 
             if(newChatData.text_girl == null || newChatData.text_girl.Equals("") || newChatData.text_girl.Equals("0"))

@@ -23,7 +23,7 @@ namespace MtC.Mod.ChineseParents.Yuri
             Main.ModEntry.Logger.Log("生成新周目玩家数据方法即将调用");
 
             // 周目是儿子则不处理
-            if (record_manager.InstanceManagerRecord.CurrentRecord.playerSex == 2)
+            if (record_manager.InstanceManagerRecord.CurrentRecord.playerSex == 1)
             {
                 Main.ModEntry.Logger.Log("新周目是儿子，不进行处理");
                 return;
