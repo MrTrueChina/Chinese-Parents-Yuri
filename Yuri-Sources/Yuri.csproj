@@ -105,8 +105,7 @@
     <Compile Include="AddTransferEvent.cs" />
     <Compile Include="ChangeGirlsLovingChatToDaughter.cs" />
     <Compile Include="OpenGirlsPanel.cs" />
-    <Compile Include="RepairGirlLovingChatName.cs" />
-    <Compile Include="RepairGirlLovingChatText.cs" />
+    <Compile Include="RepairGirlLovingChatDataLost.cs" />
     <Compile Include="RepairNextGenerationFatherLost.cs" />
     <Compile Include="SaveGirlsLoving.cs" />
     <Compile Include="ShowGirlsInBlinddate.cs" />

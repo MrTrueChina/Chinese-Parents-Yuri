@@ -89,7 +89,7 @@ namespace MtC.Mod.ChineseParents.Yuri
                 // 补充转校事件
                 AddTransferEvent.ChangeTransferEvents();
                 // 修复女儿版读取不到儿子版独有文本的问题
-                RepairGirlLovingChatText.AddRepair();
+                RepairGirlLovingChatDataLost.AddRepair();
                 // 修改女生好感事件中针对于儿子性别的对话文本
                 ChangeGirlsLovingChatToDaughter.AddChange();
             }
@@ -99,7 +99,7 @@ namespace MtC.Mod.ChineseParents.Yuri
                 // 取消补充转校事件
                 AddTransferEvent.UnchangeTransferEvents();
                 // 取消修复女儿版读取不到儿子版独有文本的问题
-                RepairGirlLovingChatText.RemoveRepair();
+                RepairGirlLovingChatDataLost.RemoveRepair();
                 // 取消修改女生好感事件中针对于儿子性别的对话文本
                 ChangeGirlsLovingChatToDaughter.RemoveChange();
             }
@@ -123,8 +123,8 @@ namespace MtC.Mod.ChineseParents.Yuri
             AddTransferEvent.UnchangeTransferEvents();
             AddTransferEvent.ChangeTransferEvents();
             // 修复女儿版读取不到儿子版独有文本的问题
-            RepairGirlLovingChatText.RemoveRepair();
-            RepairGirlLovingChatText.AddRepair();
+            RepairGirlLovingChatDataLost.RemoveRepair();
+            RepairGirlLovingChatDataLost.AddRepair();
             // 修改女生好感事件中针对于儿子性别的对话文本
             ChangeGirlsLovingChatToDaughter.RemoveChange();
             ChangeGirlsLovingChatToDaughter.AddChange();
