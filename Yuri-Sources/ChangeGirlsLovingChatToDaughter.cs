@@ -398,8 +398,8 @@ namespace MtC.Mod.ChineseParents.Yuri
             ChatData newChatData = modifiedChatData.Copy();
 
             // 原文是：你！你小子威胁我？！呃……好好好，我是牧唯！我还想继续学业所以转学过来，毕竟不想被公司发现我擅自行动，会有麻烦的。这样行了吧！
-            newChatData.text = "你！你小丫头威胁我？！呃……好好好，我是牧唯！我还想继续学业所以转学过来，毕竟不想被公司发现我擅自行动，会有麻烦的。这样行了吧！";
-            newChatData.text_girl = "你！你小丫头威胁我？！呃……好好好，我是牧唯！我还想继续学业所以转学过来，毕竟不想被公司发现我擅自行动，会有麻烦的。这样行了吧！";
+            newChatData.text = "你！你个小丫头威胁我？！呃……好好好，我是牧唯！我还想继续学业所以转学过来，毕竟不想被公司发现我擅自行动，会有麻烦的。这样行了吧！";
+            newChatData.text_girl = "你！你个小丫头威胁我？！呃……好好好，我是牧唯！我还想继续学业所以转学过来，毕竟不想被公司发现我擅自行动，会有麻烦的。这样行了吧！";
 
             return newChatData;
         }
@@ -467,8 +467,8 @@ namespace MtC.Mod.ChineseParents.Yuri
             ChatData newChatData = modifiedChatData.Copy();
 
             // 原文是：嘿，你小子竟然还质疑姐姐，那是时候教育教育你了~
-            newChatData.text = "嘿，你小丫头竟然还质疑姐姐，那是时候教育教育你了~";
-            newChatData.text_girl = "嘿，你小丫头竟然还质疑姐姐，那是时候教育教育你了~";
+            newChatData.text = "嘿，你这小丫头竟然还质疑姐姐，那是时候教育教育你了~";
+            newChatData.text_girl = "嘿，你这小丫头竟然还质疑姐姐，那是时候教育教育你了~";
 
             return newChatData;
         }
