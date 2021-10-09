@@ -57,6 +57,39 @@ namespace MtC.Mod.ChineseParents.Yuri
         /// </summary>
         public static void RemoveChange()
         {
+            // 刘偏偏
+            ChatControl.RemoveModifyChat(810010303, ChangeLiuPianPianLoving30);
+            ChatControl.RemoveModifyChat(810010804, ChangeLiuPianPianLoving80);
+
+            // 章涵之
+            ChatControl.RemoveModifyChat(810040710, ChangeZhangHanZhiLoving70);
+            ChatControl.RemoveModifyChat(810040806, ChangeZhangHanZhiLoving80);
+            ChatControl.RemoveModifyChat(810040904, ChangeZhangHanZhiLoving90_1);
+            ChatControl.RemoveModifyChat(810040905, ChangeZhangHanZhiLoving90_2);
+
+            // 汤金娜
+            ChatControl.RemoveModifyChat(810070801, ChangeTangJinNaLoving80);
+
+            // 苏芳允
+            ChatControl.RemoveModifyChat(810080310, ChangeSuFangYunLoving30);
+            ChatControl.RemoveModifyChat(810080502, ChangeSuFangYunLoving50_1);
+            ChatControl.RemoveModifyChat(810080504, ChangeSuFangYunLoving50_2);
+            ChatControl.RemoveModifyChat(8300801, ChangeSuFangYunGood1);
+            ChatControl.RemoveModifyChat(8300802, ChangeSuFangYunGood2);
+            ChatControl.RemoveModifyChat(8300803, ChangeSuFangYunGood3);
+            ChatControl.RemoveModifyChat(8500803, ChangeSuFangYunBad);
+
+            // 牧唯
+            ChatControl.RemoveModifyChat(810090218, ChangeMuWeiLoving20_1);
+            ChatControl.RemoveModifyChat(810090222, ChangeMuWeiLoving20_2);
+            ChatControl.RemoveModifyChat(810090301, ChangeMuWeiLoving30_1);
+            ChatControl.RemoveModifyChat(810090309, ChangeMuWeiLoving30_2);
+            ChatControl.RemoveModifyChat(810090803, ChangeMuWeiLoving80_1);
+            ChatControl.RemoveModifyChat(810090804, ChangeMuWeiLoving80_2);
+            ChatControl.RemoveModifyChat(810090805, ChangeMuWeiLoving80_3);
+            ChatControl.RemoveModifyChat(810090806, ChangeMuWeiLoving80_4);
+            ChatControl.RemoveModifyChat(810090908, ChangeMuWeiLoving90);
+            ChatControl.RemoveModifyChat(8500903, ChangeMuWeiBad);
         }
 
         /// <summary>
