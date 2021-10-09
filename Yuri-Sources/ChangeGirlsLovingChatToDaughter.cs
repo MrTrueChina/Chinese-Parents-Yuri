@@ -26,7 +26,10 @@ namespace MtC.Mod.ChineseParents.Yuri
             ChatControl.ModifyChat(810040806, ChangeZhangHanZhiLoving80);
             ChatControl.ModifyChat(810040904, ChangeZhangHanZhiLoving90_1);
             ChatControl.ModifyChat(810040905, ChangeZhangHanZhiLoving90_2);
-            
+
+            // 汤金娜
+            ChatControl.ModifyChat(810070801, ChangeTangJinNaLoving80);
+
             // 苏芳允
             ChatControl.ModifyChat(810080310, ChangeSuFangYunLoving30);
             ChatControl.ModifyChat(810080502, ChangeSuFangYunLoving50_1);
@@ -37,8 +40,10 @@ namespace MtC.Mod.ChineseParents.Yuri
             ChatControl.ModifyChat(8500803, ChangeSuFangYunBad);
 
             // 牧唯
-            ChatControl.ModifyChat(810090222, ChangeMuWeiLoving20);
-            ChatControl.ModifyChat(810090301, ChangeMuWeiLoving30);
+            ChatControl.ModifyChat(810090218, ChangeMuWeiLoving20_1);
+            ChatControl.ModifyChat(810090222, ChangeMuWeiLoving20_2);
+            ChatControl.ModifyChat(810090301, ChangeMuWeiLoving30_1);
+            ChatControl.ModifyChat(810090309, ChangeMuWeiLoving30_2);
             ChatControl.ModifyChat(810090803, ChangeMuWeiLoving80_1);
             ChatControl.ModifyChat(810090804, ChangeMuWeiLoving80_2);
             ChatControl.ModifyChat(810090805, ChangeMuWeiLoving80_3);
@@ -188,6 +193,29 @@ namespace MtC.Mod.ChineseParents.Yuri
             // 原文是：对，做渣男也是要有资本的……
             newChatData.text = "对，做渣女也是要有资本的……";
             newChatData.text_girl = "对，做渣女也是要有资本的……";
+
+            return newChatData;
+        }
+
+        /// <summary>
+        /// 修改汤金娜 80 好感度对话
+        /// </summary>
+        /// <param name="originChatData"></param>
+        /// <param name="modifiedChatData"></param>
+        /// <returns></returns>
+        public static ChatData ChangeTangJinNaLoving80(ChatData originChatData, ChatData modifiedChatData)
+        {
+            // 当前周目是儿子则不处理
+            if (record_manager.InstanceManagerRecord.CurrentRecord.playerSex == 1)
+            {
+                return modifiedChatData;
+            }
+
+            ChatData newChatData = modifiedChatData.Copy();
+
+            // 原文是：看来，穷小子的生活也可以过得有滋有味啊
+            newChatData.text = "看来，穷孩子的生活也可以过得有滋有味啊";
+            newChatData.text_girl = "看来，穷孩子的生活也可以过得有滋有味啊";
 
             return newChatData;
         }
@@ -354,12 +382,35 @@ namespace MtC.Mod.ChineseParents.Yuri
         }
 
         /// <summary>
-        /// 修改牧唯 20 好感度对话
+        /// 修改牧唯 20 好感度对话，第一部分
         /// </summary>
         /// <param name="originChatData"></param>
         /// <param name="modifiedChatData"></param>
         /// <returns></returns>
-        public static ChatData ChangeMuWeiLoving20(ChatData originChatData, ChatData modifiedChatData)
+        public static ChatData ChangeMuWeiLoving20_1(ChatData originChatData, ChatData modifiedChatData)
+        {
+            // 当前周目是儿子则不处理
+            if (record_manager.InstanceManagerRecord.CurrentRecord.playerSex == 1)
+            {
+                return modifiedChatData;
+            }
+
+            ChatData newChatData = modifiedChatData.Copy();
+
+            // 原文是：你！你小子威胁我？！呃……好好好，我是牧唯！我还想继续学业所以转学过来，毕竟不想被公司发现我擅自行动，会有麻烦的。这样行了吧！
+            newChatData.text = "你！你小丫头威胁我？！呃……好好好，我是牧唯！我还想继续学业所以转学过来，毕竟不想被公司发现我擅自行动，会有麻烦的。这样行了吧！";
+            newChatData.text_girl = "你！你小丫头威胁我？！呃……好好好，我是牧唯！我还想继续学业所以转学过来，毕竟不想被公司发现我擅自行动，会有麻烦的。这样行了吧！";
+
+            return newChatData;
+        }
+
+        /// <summary>
+        /// 修改牧唯 20 好感度对话，第二部分
+        /// </summary>
+        /// <param name="originChatData"></param>
+        /// <param name="modifiedChatData"></param>
+        /// <returns></returns>
+        public static ChatData ChangeMuWeiLoving20_2(ChatData originChatData, ChatData modifiedChatData)
         {
             // 当前周目是儿子则不处理
             if (record_manager.InstanceManagerRecord.CurrentRecord.playerSex == 1)
@@ -377,12 +428,12 @@ namespace MtC.Mod.ChineseParents.Yuri
         }
 
         /// <summary>
-        /// 修改牧唯 30 好感度对话
+        /// 修改牧唯 30 好感度对话，第一部分
         /// </summary>
         /// <param name="originChatData"></param>
         /// <param name="modifiedChatData"></param>
         /// <returns></returns>
-        public static ChatData ChangeMuWeiLoving30(ChatData originChatData, ChatData modifiedChatData)
+        public static ChatData ChangeMuWeiLoving30_1(ChatData originChatData, ChatData modifiedChatData)
         {
             // 当前周目是儿子则不处理
             if (record_manager.InstanceManagerRecord.CurrentRecord.playerSex == 1)
@@ -395,6 +446,29 @@ namespace MtC.Mod.ChineseParents.Yuri
             // 原文是：这不是小老弟吗~好巧啊，你家也是这个方向么？一起走？
             newChatData.text = "这不是小老妹吗~好巧啊，你家也是这个方向么？一起走？";
             newChatData.text_girl = "这不是小老妹吗~好巧啊，你家也是这个方向么？一起走？";
+
+            return newChatData;
+        }
+
+        /// <summary>
+        /// 修改牧唯 30 好感度对话，第二部分
+        /// </summary>
+        /// <param name="originChatData"></param>
+        /// <param name="modifiedChatData"></param>
+        /// <returns></returns>
+        public static ChatData ChangeMuWeiLoving30_2(ChatData originChatData, ChatData modifiedChatData)
+        {
+            // 当前周目是儿子则不处理
+            if (record_manager.InstanceManagerRecord.CurrentRecord.playerSex == 1)
+            {
+                return modifiedChatData;
+            }
+
+            ChatData newChatData = modifiedChatData.Copy();
+
+            // 原文是：嘿，你小子竟然还质疑姐姐，那是时候教育教育你了~
+            newChatData.text = "嘿，你小丫头竟然还质疑姐姐，那是时候教育教育你了~";
+            newChatData.text_girl = "嘿，你小丫头竟然还质疑姐姐，那是时候教育教育你了~";
 
             return newChatData;
         }
