@@ -103,6 +103,7 @@
   <ItemGroup>
     <Compile Include="AddSonFriend.cs" />
     <Compile Include="AddTransferEvent.cs" />
+    <Compile Include="ChangeBlinddateSuccessText.cs" />
     <Compile Include="ChangeGirlsLovingChatToDaughter.cs" />
     <Compile Include="OpenGirlsPanel.cs" />
     <Compile Include="RepairGirlLovingChatDataLost.cs" />

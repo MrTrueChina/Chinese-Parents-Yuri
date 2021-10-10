@@ -38,10 +38,10 @@ namespace MtC.Mod.ChineseParents.Yuri
                 // 如果设置的转学回合数和原本的转学回合数相同，则这个事件不会在改变恋爱时间 Mod 中被注册，而游戏原逻辑女儿版不会发出这个转学事件，需要让事件管理器添加这个事件
                 if (param[1] == param[0])
                 {
-                    // 在设置的回合数添加转学事件
+                    // 添加转学事件，出现条件是：是出现的回合 并且 这一周目是女儿
                     EventControl.ChatEventControlParam addParam = EventControl.AddChatEvent(
                         param[2],
-                        (id) => player_data.Instance.round_current == param[1],
+                        (id) => player_data.Instance.round_current == param[1] && record_manager.InstanceManagerRecord.CurrentRecord.playerSex == 2,
                         (id) => { });
                     // 记录添加的事件
                     addCharEventParams.Add(addParam);

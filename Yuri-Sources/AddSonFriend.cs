@@ -20,7 +20,7 @@ namespace MtC.Mod.ChineseParents.Yuri
                 return;
             }
 
-            Main.ModEntry.Logger.Log("生成新周目玩家数据方法即将调用");
+            Main.ModEntry.Logger.Log("生成新周目玩家数据方法调用完毕");
 
             // 周目是儿子则不处理
             if (record_manager.InstanceManagerRecord.CurrentRecord.playerSex == 1)
@@ -60,13 +60,13 @@ namespace MtC.Mod.ChineseParents.Yuri
     {
         private static void Postfix(ref record __result)
         {
-            // 如果 Mod 未启动则直接按照游戏原本的逻辑进行调用
+            // 如果 Mod 未启动则不处理
             if (!Main.enabled)
             {
                 return;
             }
 
-            Main.ModEntry.Logger.Log("开新档时生成玩家数据方法即将调用");
+            Main.ModEntry.Logger.Log("开新档时生成玩家数据方法调用完毕");
 
             // 新档是儿子则不处理
             if (__result.playerSex == 1)
