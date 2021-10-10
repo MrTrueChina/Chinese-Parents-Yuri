@@ -1,0 +1,424 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Yuri</name>
+    </assembly>
+    <members>
+        <member name="T:MtC.Mod.ChineseParents.Yuri.end_panel_info_reset_record">
+            <summary>
+            开新周目时生成数据的方法，里面有制作组说过的二周目性别和一周目相反的代码，在这里把儿子独有的朋友填充给女儿（可能不是必须的）
+            </summary>
+        </member>
+        <member name="T:MtC.Mod.ChineseParents.Yuri.record_manager_create_new">
+            <summary>
+            在开新档时生成新的玩家数据的方法，在这里把儿子独有的朋友填充给女儿、给女儿设置女生好感度字典（这两个都有可能不是必须的）
+            </summary>
+        </member>
+        <member name="F:MtC.Mod.ChineseParents.Yuri.AddTransferEvent.addCharEventParams">
+            <summary>
+            所有添加的事件
+            </summary>
+        </member>
+        <member name="M:MtC.Mod.ChineseParents.Yuri.AddTransferEvent.ChangeTransferEvents">
+            <summary>
+            向事件控制前置 Mod 添加修改转学事件的事件
+            </summary>
+        </member>
+        <member name="M:MtC.Mod.ChineseParents.Yuri.AddTransferEvent.UnchangeTransferEvents">
+            <summary>
+            从事件控制前置 Mod 移除修改转学事件的事件
+            </summary>
+        </member>
+        <member name="T:MtC.Mod.ChineseParents.Yuri.Panel_blinddate_win_process_RecordBlinddate">
+            <summary>
+            相亲成功后执行的方法，在这里记录下相亲成功的对象
+            </summary>
+        </member>
+        <member name="F:MtC.Mod.ChineseParents.Yuri.Panel_blinddate_win_process_RecordBlinddate.selectedBlinddateId">
+            <summary>
+            选择的相亲对象的 ID
+            </summary>
+        </member>
+        <member name="T:MtC.Mod.ChineseParents.Yuri.ReadXml_GetString">
+            <summary>
+            读取字符串的方法，在这里修改获取到的求婚成功文本
+            </summary>
+        </member>
+        <member name="T:MtC.Mod.ChineseParents.Yuri.ChangeGirlsLovingChatToDaughter">
+            <summary>
+            修改女同学社交对话中的针对于儿子性别的对话内容
+            </summary>
+        </member>
+        <member name="M:MtC.Mod.ChineseParents.Yuri.ChangeGirlsLovingChatToDaughter.AddChange">
+            <summary>
+            修改女同学社交对话中的针对于儿子性别的对话内容
+            </summary>
+        </member>
+        <member name="M:MtC.Mod.ChineseParents.Yuri.ChangeGirlsLovingChatToDaughter.RemoveChange">
+            <summary>
+            取消修改女同学社交对话中的针对于儿子性别的对话内容
+            </summary>
+        </member>
+        <member name="M:MtC.Mod.ChineseParents.Yuri.ChangeGirlsLovingChatToDaughter.ChangeLiuPianPianLoving30(MtC.Mod.ChineseParents.ChatControlLib.ChatData,MtC.Mod.ChineseParents.ChatControlLib.ChatData)">
+            <summary>
+            修改刘偏偏 30 好感度对话
+            </summary>
+            <param name="originChatData"></param>
+            <param name="modifiedChatData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MtC.Mod.ChineseParents.Yuri.ChangeGirlsLovingChatToDaughter.ChangeLiuPianPianLoving80(MtC.Mod.ChineseParents.ChatControlLib.ChatData,MtC.Mod.ChineseParents.ChatControlLib.ChatData)">
+            <summary>
+            修改刘偏偏 80 好感度对话
+            </summary>
+            <param name="originChatData"></param>
+            <param name="modifiedChatData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MtC.Mod.ChineseParents.Yuri.ChangeGirlsLovingChatToDaughter.ChangeZhangHanZhiLoving70(MtC.Mod.ChineseParents.ChatControlLib.ChatData,MtC.Mod.ChineseParents.ChatControlLib.ChatData)">
+            <summary>
+            修改章涵之 70 好感度对话
+            </summary>
+            <param name="originChatData"></param>
+            <param name="modifiedChatData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MtC.Mod.ChineseParents.Yuri.ChangeGirlsLovingChatToDaughter.ChangeZhangHanZhiLoving80(MtC.Mod.ChineseParents.ChatControlLib.ChatData,MtC.Mod.ChineseParents.ChatControlLib.ChatData)">
+            <summary>
+            修改章涵之 80 好感度对话
+            </summary>
+            <param name="originChatData"></param>
+            <param name="modifiedChatData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MtC.Mod.ChineseParents.Yuri.ChangeGirlsLovingChatToDaughter.ChangeZhangHanZhiLoving90_1(MtC.Mod.ChineseParents.ChatControlLib.ChatData,MtC.Mod.ChineseParents.ChatControlLib.ChatData)">
+            <summary>
+            修改章涵之 90 好感度对话，第一部分
+            </summary>
+            <param name="originChatData"></param>
+            <param name="modifiedChatData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MtC.Mod.ChineseParents.Yuri.ChangeGirlsLovingChatToDaughter.ChangeZhangHanZhiLoving90_2(MtC.Mod.ChineseParents.ChatControlLib.ChatData,MtC.Mod.ChineseParents.ChatControlLib.ChatData)">
+            <summary>
+            修改章涵之 90 好感度对话，第二部分
+            </summary>
+            <param name="originChatData"></param>
+            <param name="modifiedChatData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MtC.Mod.ChineseParents.Yuri.ChangeGirlsLovingChatToDaughter.ChangeTangJinNaLoving80(MtC.Mod.ChineseParents.ChatControlLib.ChatData,MtC.Mod.ChineseParents.ChatControlLib.ChatData)">
+            <summary>
+            修改汤金娜 80 好感度对话
+            </summary>
+            <param name="originChatData"></param>
+            <param name="modifiedChatData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MtC.Mod.ChineseParents.Yuri.ChangeGirlsLovingChatToDaughter.ChangeSuFangYunLoving30(MtC.Mod.ChineseParents.ChatControlLib.ChatData,MtC.Mod.ChineseParents.ChatControlLib.ChatData)">
+            <summary>
+            修改苏芳允 30 好感度对话
+            </summary>
+            <param name="originChatData"></param>
+            <param name="modifiedChatData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MtC.Mod.ChineseParents.Yuri.ChangeGirlsLovingChatToDaughter.ChangeSuFangYunLoving50_1(MtC.Mod.ChineseParents.ChatControlLib.ChatData,MtC.Mod.ChineseParents.ChatControlLib.ChatData)">
+            <summary>
+            修改苏芳允 50 好感度对话，第一部分
+            </summary>
+            <param name="originChatData"></param>
+            <param name="modifiedChatData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MtC.Mod.ChineseParents.Yuri.ChangeGirlsLovingChatToDaughter.ChangeSuFangYunLoving50_2(MtC.Mod.ChineseParents.ChatControlLib.ChatData,MtC.Mod.ChineseParents.ChatControlLib.ChatData)">
+            <summary>
+            修改苏芳允 50 好感度对话，第二部分
+            </summary>
+            <param name="originChatData"></param>
+            <param name="modifiedChatData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MtC.Mod.ChineseParents.Yuri.ChangeGirlsLovingChatToDaughter.ChangeSuFangYunGood1(MtC.Mod.ChineseParents.ChatControlLib.ChatData,MtC.Mod.ChineseParents.ChatControlLib.ChatData)">
+            <summary>
+            修改苏芳允好感度上升对话 1
+            </summary>
+            <param name="originChatData"></param>
+            <param name="modifiedChatData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MtC.Mod.ChineseParents.Yuri.ChangeGirlsLovingChatToDaughter.ChangeSuFangYunGood2(MtC.Mod.ChineseParents.ChatControlLib.ChatData,MtC.Mod.ChineseParents.ChatControlLib.ChatData)">
+            <summary>
+            修改苏芳允好感度上升对话 2
+            </summary>
+            <param name="originChatData"></param>
+            <param name="modifiedChatData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MtC.Mod.ChineseParents.Yuri.ChangeGirlsLovingChatToDaughter.ChangeSuFangYunGood3(MtC.Mod.ChineseParents.ChatControlLib.ChatData,MtC.Mod.ChineseParents.ChatControlLib.ChatData)">
+            <summary>
+            修改苏芳允好感度上升对话 3
+            </summary>
+            <param name="originChatData"></param>
+            <param name="modifiedChatData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MtC.Mod.ChineseParents.Yuri.ChangeGirlsLovingChatToDaughter.ChangeSuFangYunBad(MtC.Mod.ChineseParents.ChatControlLib.ChatData,MtC.Mod.ChineseParents.ChatControlLib.ChatData)">
+            <summary>
+            修改苏芳允好感度下降对话
+            </summary>
+            <param name="originChatData"></param>
+            <param name="modifiedChatData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MtC.Mod.ChineseParents.Yuri.ChangeGirlsLovingChatToDaughter.ChangeMuWeiLoving20_1(MtC.Mod.ChineseParents.ChatControlLib.ChatData,MtC.Mod.ChineseParents.ChatControlLib.ChatData)">
+            <summary>
+            修改牧唯 20 好感度对话，第一部分
+            </summary>
+            <param name="originChatData"></param>
+            <param name="modifiedChatData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MtC.Mod.ChineseParents.Yuri.ChangeGirlsLovingChatToDaughter.ChangeMuWeiLoving20_2(MtC.Mod.ChineseParents.ChatControlLib.ChatData,MtC.Mod.ChineseParents.ChatControlLib.ChatData)">
+            <summary>
+            修改牧唯 20 好感度对话，第二部分
+            </summary>
+            <param name="originChatData"></param>
+            <param name="modifiedChatData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MtC.Mod.ChineseParents.Yuri.ChangeGirlsLovingChatToDaughter.ChangeMuWeiLoving30_1(MtC.Mod.ChineseParents.ChatControlLib.ChatData,MtC.Mod.ChineseParents.ChatControlLib.ChatData)">
+            <summary>
+            修改牧唯 30 好感度对话，第一部分
+            </summary>
+            <param name="originChatData"></param>
+            <param name="modifiedChatData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MtC.Mod.ChineseParents.Yuri.ChangeGirlsLovingChatToDaughter.ChangeMuWeiLoving30_2(MtC.Mod.ChineseParents.ChatControlLib.ChatData,MtC.Mod.ChineseParents.ChatControlLib.ChatData)">
+            <summary>
+            修改牧唯 30 好感度对话，第二部分
+            </summary>
+            <param name="originChatData"></param>
+            <param name="modifiedChatData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MtC.Mod.ChineseParents.Yuri.ChangeGirlsLovingChatToDaughter.ChangeMuWeiLoving80_1(MtC.Mod.ChineseParents.ChatControlLib.ChatData,MtC.Mod.ChineseParents.ChatControlLib.ChatData)">
+            <summary>
+            修改牧唯 80 好感度对话，第一部分
+            </summary>
+            <param name="originChatData"></param>
+            <param name="modifiedChatData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MtC.Mod.ChineseParents.Yuri.ChangeGirlsLovingChatToDaughter.ChangeMuWeiLoving80_2(MtC.Mod.ChineseParents.ChatControlLib.ChatData,MtC.Mod.ChineseParents.ChatControlLib.ChatData)">
+            <summary>
+            修改牧唯 80 好感度对话，第二部分
+            </summary>
+            <param name="originChatData"></param>
+            <param name="modifiedChatData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MtC.Mod.ChineseParents.Yuri.ChangeGirlsLovingChatToDaughter.ChangeMuWeiLoving80_3(MtC.Mod.ChineseParents.ChatControlLib.ChatData,MtC.Mod.ChineseParents.ChatControlLib.ChatData)">
+            <summary>
+            修改牧唯 80 好感度对话，第三部分
+            </summary>
+            <param name="originChatData"></param>
+            <param name="modifiedChatData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MtC.Mod.ChineseParents.Yuri.ChangeGirlsLovingChatToDaughter.ChangeMuWeiLoving80_4(MtC.Mod.ChineseParents.ChatControlLib.ChatData,MtC.Mod.ChineseParents.ChatControlLib.ChatData)">
+            <summary>
+            修改牧唯 80 好感度对话，第四部分
+            </summary>
+            <param name="originChatData"></param>
+            <param name="modifiedChatData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MtC.Mod.ChineseParents.Yuri.ChangeGirlsLovingChatToDaughter.ChangeMuWeiLoving90(MtC.Mod.ChineseParents.ChatControlLib.ChatData,MtC.Mod.ChineseParents.ChatControlLib.ChatData)">
+            <summary>
+            修改牧唯 90 好感度对话
+            </summary>
+            <param name="originChatData"></param>
+            <param name="modifiedChatData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MtC.Mod.ChineseParents.Yuri.ChangeGirlsLovingChatToDaughter.ChangeMuWeiBad(MtC.Mod.ChineseParents.ChatControlLib.ChatData,MtC.Mod.ChineseParents.ChatControlLib.ChatData)">
+            <summary>
+            修改牧唯降低好感度对话
+            </summary>
+            <param name="originChatData"></param>
+            <param name="modifiedChatData"></param>
+            <returns></returns>
+        </member>
+        <member name="T:MtC.Mod.ChineseParents.Yuri.player_data_read_data">
+            <summary>
+            读取玩家数据方法，可能是读档的时候用到的方法，这里有开启按钮功能。在这里控制显隐社交按钮
+            </summary>
+        </member>
+        <member name="T:MtC.Mod.ChineseParents.Yuri.week_player_system_open">
+            <summary>
+            每周开始时开启按钮的方法。在这里控制显隐社交按钮
+            </summary>
+        </member>
+        <member name="T:MtC.Mod.ChineseParents.Yuri.UILabel_Start">
+            <summary>
+            这是进行 UI 文本国际化的组件的方法，这个方法会进行 UI 文本的国际化，也就是把 UI 文本替换成符合游戏选择语言的内容
+            </summary>
+        </member>
+        <member name="T:MtC.Mod.ChineseParents.Yuri.CreateGirldPanelButton">
+            <summary>
+            给女儿版创建打开女生社交面板的按钮的类
+            </summary>
+        </member>
+        <member name="F:MtC.Mod.ChineseParents.Yuri.CreateGirldPanelButton.GIRLS_PANEL_BUTTON_NAME">
+            <summary>
+            打开女生面板的社交按钮显示的文本
+            </summary>
+        </member>
+        <member name="F:MtC.Mod.ChineseParents.Yuri.CreateGirldPanelButton.BOYS_PANEL_BUTTON_NAME">
+            <summary>
+            打开男生面板的社交按钮显示的文本
+            </summary>
+        </member>
+        <member name="P:MtC.Mod.ChineseParents.Yuri.CreateGirldPanelButton.GirlsPanelButton">
+            <summary>
+            女儿版的打开女生面板按钮
+            </summary>
+        </member>
+        <member name="M:MtC.Mod.ChineseParents.Yuri.CreateGirldPanelButton.CreateButton">
+            <summary>
+            给女儿版创建打开女生社交面板的按钮
+            </summary>
+        </member>
+        <member name="T:MtC.Mod.ChineseParents.Yuri.RepairGirlLovingChatDataLost">
+            <summary>
+            修复女儿版进行儿子版独有对话时部分数据丢失的问题
+            </summary>
+        </member>
+        <member name="F:MtC.Mod.ChineseParents.Yuri.RepairGirlLovingChatDataLost.wrongGirlNameIdToCorrectGirlNameId">
+            <summary>
+            错误的女生名称 ID 到正确的女生名称 ID 的映射
+            </summary>
+        </member>
+        <member name="M:MtC.Mod.ChineseParents.Yuri.RepairGirlLovingChatDataLost.AddRepair">
+            <summary>
+            修复女儿版进行儿子版独有对话时部分数据丢失的问题
+            </summary>
+        </member>
+        <member name="M:MtC.Mod.ChineseParents.Yuri.RepairGirlLovingChatDataLost.RemoveRepair">
+            <summary>
+            取消修复女儿版进行儿子版独有对话时部分数据丢失的问题
+            </summary>
+        </member>
+        <member name="M:MtC.Mod.ChineseParents.Yuri.RepairGirlLovingChatDataLost.RepairGirlChatDataLost(MtC.Mod.ChineseParents.ChatControlLib.ChatData,MtC.Mod.ChineseParents.ChatControlLib.ChatData)">
+            <summary>
+            修复女儿版读取儿子版独有的对话时部分数据丢失的问题
+            </summary>
+            <param name="originChatData"></param>
+            <param name="modifiedChatData"></param>
+            <returns></returns>
+        </member>
+        <member name="T:MtC.Mod.ChineseParents.Yuri.chat_manager_start_chat">
+            <summary>
+            发起对话方法
+            </summary>
+        </member>
+        <member name="F:MtC.Mod.ChineseParents.Yuri.chat_manager_start_chat.lastChatObject">
+            <summary>
+            上一个对话物体，原版对话的原理是每一句生成一个新的对话物体并销毁旧的对话物体，但那就导致在生成新对话后到渲染前，因为 Unity 的 Destroy 的延迟销毁特性会导致场上有两个对话物体，这个字段用来记录旧的那个
+            </summary>
+        </member>
+        <member name="T:MtC.Mod.ChineseParents.Yuri.record_manager_saverecord">
+            <summary>
+            保存游戏时调用的方法。原逻辑中女儿不会保存女生好感，在这里进行补充
+            </summary>
+        </member>
+        <member name="T:MtC.Mod.ChineseParents.Yuri.Panel_blinddate_create_blinddates">
+            <summary>
+            获取所有相亲选项的方法，原逻辑是儿子只能获取女同学、女儿只能获取男同学，在这里让女儿也能显示女同学
+            </summary>
+        </member>
+        <member name="T:MtC.Mod.ChineseParents.Yuri.Panel_blinddate_create_blinddates.ClassmateLoving">
+            <summary>
+            暂存同学 ID 和好感度的类
+            </summary>
+        </member>
+        <member name="F:MtC.Mod.ChineseParents.Yuri.Panel_blinddate_create_blinddates.ClassmateLoving.id">
+            <summary>
+            同学 ID
+            </summary>
+        </member>
+        <member name="F:MtC.Mod.ChineseParents.Yuri.Panel_blinddate_create_blinddates.ClassmateLoving.loving">
+            <summary>
+            好感度
+            </summary>
+        </member>
+        <member name="M:MtC.Mod.ChineseParents.Yuri.Panel_blinddate_create_blinddates.GetConfidanteMengMengBlinddateData">
+            <summary>
+            获取 闺蜜-萌萌 的相亲数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:MtC.Mod.ChineseParents.Yuri.Panel_blinddate_win_process">
+            <summary>
+            相亲成功后调用的方法。这里有保存父母信息给下一代的功能，在这里将相亲选中的对象保存为下一代的父亲
+            </summary>
+        </member>
+        <member name="T:MtC.Mod.ChineseParents.Yuri.comedy_manager_is_comedy_condition">
+            <summary>
+            原逻辑中判断一个事件是否符合触发条件的方法。在这里进行修改让女儿也能看到儿子独有的事件
+            </summary>
+        </member>
+        <member name="M:MtC.Mod.ChineseParents.Yuri.comedy_manager_is_comedy_condition.CopyComedy(comedy)">
+            <summary>
+            复制一个仅对话事件的数据
+            </summary>
+            <param name="originComedy"></param>
+            <returns></returns>
+        </member>
+        <member name="T:MtC.Mod.ChineseParents.Yuri.panel_girls_add_alert">
+            <summary>
+            女生面板增加恋爱警告值的方法，这个方法会随机增加一定量的恋爱警告值，恋爱警告会根据警告值出现。男女同学警告值不通用，在这里进行同步
+            </summary>
+        </member>
+        <member name="T:MtC.Mod.ChineseParents.Yuri.BoysManager_AddAlert">
+            <summary>
+            男生面板增加恋爱警告值的方法，这个方法和女生面板一样随机增加警告值。另外一提，这个方法在原代码中还负责继续向后调用。男女同学警告值不通用，在这里进行同步
+            </summary>
+        </member>
+        <member name="T:MtC.Mod.ChineseParents.Yuri.Settings">
+            <summary>
+            这个 Mod 的设置
+            </summary>
+        </member>
+        <member name="F:MtC.Mod.ChineseParents.Yuri.Settings.maxClassmateBlinddatesNumber">
+            <summary>
+            相亲页面最多替换多少个同学
+            </summary>
+        </member>
+        <member name="P:MtC.Mod.ChineseParents.Yuri.Main.ModEntry">
+            <summary>
+            Mod 对象
+            </summary>
+        </member>
+        <member name="F:MtC.Mod.ChineseParents.Yuri.Main.enabled">
+            <summary>
+            这个 Mod 是否启动
+            </summary>
+        </member>
+        <member name="F:MtC.Mod.ChineseParents.Yuri.Main.settings">
+            <summary>
+            这个 Mod 的设置
+            </summary>
+        </member>
+        <member name="M:MtC.Mod.ChineseParents.Yuri.Main.OnToggle(UnityModManagerNet.UnityModManager.ModEntry,System.Boolean)">
+            <summary>
+            Mod Manager 对 Mod 进行控制的时候会调用这个方法
+            </summary>
+            <param name="modEntry"></param>
+            <param name="value">这个 Mod 是否激活</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
