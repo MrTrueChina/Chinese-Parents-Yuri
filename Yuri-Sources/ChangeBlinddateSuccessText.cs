@@ -61,7 +61,7 @@ namespace MtC.Mod.ChineseParents.Yuri
             // 添加闺蜜的 id
             girlIdList.Add(3008);
             // 添加儿子版女同学的 id
-            if(girlmanager.InstanceGirlmanager == null && girlmanager.InstanceGirlmanager.GirlsDictionary == null)
+            if(girlmanager.InstanceGirlmanager != null && girlmanager.InstanceGirlmanager.GirlsDictionary != null)
             {
                 foreach(KeyValuePair<int,int> girlLoving in girlmanager.InstanceGirlmanager.GirlsDictionary)
                 {
