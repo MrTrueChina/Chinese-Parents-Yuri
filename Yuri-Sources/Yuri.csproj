@@ -101,6 +101,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddGirlsToSelectCompany.cs" />
     <Compile Include="AddSonFriend.cs" />
     <Compile Include="AddTransferEvent.cs" />
     <Compile Include="ChangeBlinddateSuccessText.cs" />
